@@ -1,14 +1,6 @@
 # main links
 main:
-  - title: "Home"
-    url: /
-  - title: "Publications"
-    url: /#publications
-  - title: "Talks"
-    url: /#talks
-  - title: "Teaching"
-    url: /#teaching
-  - title: "CV"
+  - title: "CV as PDF"
     url: /files/cv.pdf
   - title: "Blog"
     url: /blog/
