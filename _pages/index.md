@@ -4,32 +4,17 @@ author_profile: false
 permalink: /
 ---
 <style>
-/* Main container for the entire visual nav assembly */
-.visual-nav-area {
+/* Main container for the right-deep tree */
+.right-deep-nav-container {
     position: relative;
     width: 100%;
-    max-width: 300px; /* Increased width for more space */
-    height: 380px;    /* Increased height for the sub-tree */
+    max-width: 350px; /* Wider for the new tree */
+    height: 450px;    /* Taller for the new tree */
     margin: 0 auto;
     font-family: monospace;
 }
 
-/* Base container for a tree structure */
-.query-plan-container {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-}
-
-/* Sub-tree container, positioned relative to the main tree's CV node */
-#sub-tree-container {
-    top: 135px; /* Manually position under the CV node */
-    left: 85px;
-    width: 200px;
-    height: 180px;
-}
-
-.query-plan-svg {
+.right-deep-svg {
     position: absolute;
     top: 0;
     left: 0;
@@ -38,94 +23,85 @@ permalink: /
     z-index: 1;
 }
 
-.query-plan-svg line {
-    stroke: #999;
-    stroke-width: 2.5; /* Thicker lines */
-    transition: stroke 0.3s ease;
+.right-deep-svg line {
+    stroke: #888;
+    stroke-width: 3;
+    transition: stroke 0.2s ease-in-out;
 }
 
-.query-plan-svg line.highlight {
-    stroke: #007bff;
+.right-deep-svg line.highlight {
+    stroke: #0056b3;
     stroke-width: 4;
 }
 
-.query-plan-node {
+.rd-node {
     position: absolute;
     transform: translate(-50%, -50%);
     z-index: 2;
-    text-align: center;
-    background: transparent !important; /* Ensure transparent background */
+    background: transparent !important;
 }
 
-.query-plan-node a {
+.rd-node a {
     text-decoration: none;
     font-weight: bold;
-    font-size: 1.1em;
+    font-size: 1.15em;
     padding: 0.2em 0.4em;
     color: #0056b3;
-    background: transparent !important; /* Ensure transparent background */
+    background: transparent !important;
 }
 
-.query-plan-node.join {
-    font-size: 2.5em; /* Larger join symbol */
+.rd-node.join {
+    font-size: 2.5em;
     color: #333;
 }
 
-/* Positioning for MAIN tree */
-.query-plan-node.main-join-top { top: 25%; left: 50%; }
-.query-plan-node.main-join-bottom { top: 60%; left: 25%; }
-.query-plan-node.main-leaf-name { top: 90%; left: 10%; }
-.query-plan-node.main-leaf-blog { top: 90%; left: 45%; }
-.query-plan-node.main-leaf-cv { top: 60%; left: 75%; }
-
-/* Positioning for SUB tree */
-.query-plan-node.sub-join-top { top: 25%; left: 50%; }
-.query-plan-node.sub-join-bottom { top: 60%; left: 25%; }
-.query-plan-node.sub-leaf-email { top: 90%; left: 10%; }
-.query-plan-node.sub-leaf-gs { top: 90%; left: 45%; }
-.query-plan-node.sub-leaf-gh { top: 60%; left: 75%; }
+/* Precise positioning for the right-deep tree */
+.rd-node.join-1 { top: 10%; left: 50%; }
+.rd-node.homepage { top: 25%; left: 20%; }
+.rd-node.join-2 { top: 30%; left: 80%; }
+.rd-node.blog { top: 45%; left: 50%; }
+.rd-node.join-3 { top: 50%; left: 80%; }
+.rd-node.cv { top: 65%; left: 50%; }
+.rd-node.join-4 { top: 70%; left: 80%; }
+.rd-node.github { top: 85%; left: 50%; }
+.rd-node.join-5 { top: 90%; left: 80%; }
+.rd-node.scholar { top: 98%; left: 60%; }
+.rd-node.email { top: 98%; left: 95%; }
 </style>
 
 <div style="display: flex; align-items: center; margin-top: 2em;">
-  <div style="flex: 2; padding-right: 20px;"> <!-- More flex space for the nav -->
-    
-    <div class="visual-nav-area">
-        <!-- Main Nav Tree -->
-        <div id="main-tree-container" class="query-plan-container">
-            <svg class="query-plan-svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">
-                <line id="line-main-top" x1="50" y1="25" x2="25" y2="60" />
-                <line id="line-main-cv" x1="50" y1="25" x2="75" y2="60" />
-                <line id="line-main-bottom" x1="25" y1="60" x2="10" y2="90" />
-                <line id="line-main-blog" x1="25" y1="60" x2="45" y2="90" />
-            </svg>
-            <div class="query-plan-node join main-join-top">⋈</div>
-            <div class="query-plan-node join main-join-bottom">⋈</div>
-            <div id="node-name" class="query-plan-node main-leaf-name"><a href="/">Aliya Bannayeva</a></div>
-            <div id="node-blog" class="query-plan-node main-leaf-blog"><a href="/blog/">Blog</a></div>
-            <div id="node-cv" class="query-plan-node main-leaf-cv"><a>CV as PDF</a></div>
-        </div>
+  <div style="flex: 2; padding-right: 20px;">
+    <div class="right-deep-nav-container">
+        <svg class="right-deep-svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">
+            <line id="line-j1-h" x1="50" y1="10" x2="20" y2="25" />
+            <line id="line-j1-j2" x1="50" y1="10" x2="80" y2="30" />
+            <line id="line-j2-b" x1="80" y1="30" x2="50" y2="45" />
+            <line id="line-j2-j3" x1="80" y1="30" x2="80" y2="50" />
+            <line id="line-j3-c" x1="80" y1="50" x2="50" y2="65" />
+            <line id="line-j3-j4" x1="80" y1="50" x2="80" y2="70" />
+            <line id="line-j4-g" x1="80" y1="70" x2="50" y2="85" />
+            <line id="line-j4-j5" x1="80" y1="70" x2="80" y2="90" />
+            <line id="line-j5-s" x1="80" y1="90" x2="60" y2="98" />
+            <line id="line-j5-e" x1="80" y1="90" x2="95" y2="98" />
+        </svg>
 
-        <!-- Sub Nav Tree (under CV) -->
-        <div id="sub-tree-container" class="query-plan-container">
-            <svg class="query-plan-svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">
-                 <line id="line-sub-top" x1="50" y1="25" x2="25" y2="60" />
-                 <line id="line-sub-gh" x1="50" y1="25" x2="75" y2="60" />
-                 <line id="line-sub-bottom" x1="25" y1="60" x2="10" y2="90" />
-                 <line id="line-sub-gs" x1="25" y1="60" x2="45" y2="90" />
-            </svg>
-            <div class="query-plan-node join sub-join-top">⋈</div>
-            <div class="query-plan-node join sub-join-bottom">⋈</div>
-            <div id="node-email" class="query-plan-node sub-leaf-email"><a href="mailto:aliya.bannaeva@gmail.com">Email</a></div>
-            <div id="node-gs" class="query-plan-node sub-leaf-gs"><a href="https://scholar.google.com/citations?user=qyOolasAAAAJ&hl=en" target="_blank">Google Scholar</a></div>
-            <div id="node-gh" class="query-plan-node sub-leaf-gh"><a href="https://github.com/bannayeva" target="_blank">GitHub</a></div>
-        </div>
+        <!-- Nodes of the tree -->
+        <div class="rd-node join join-1">⋈</div>
+        <div id="node-homepage" class="rd-node homepage"><a href="/">Aliya Bannayeva</a></div>
+        <div class="rd-node join join-2">⋈</div>
+        <div id="node-blog" class="rd-node blog"><a href="/blog/">Blog</a></div>
+        <div class="rd-node join join-3">⋈</div>
+        <div id="node-cv" class="rd-node cv"><a href="/files/cv.pdf" target="_blank">CV as PDF</a></div>
+        <div class="rd-node join join-4">⋈</div>
+        <div id="node-github" class="rd-node github"><a href="https://github.com/bannayeva" target="_blank">GitHub</a></div>
+        <div class="rd-node join join-5">⋈</div>
+        <div id="node-scholar" class="rd-node scholar"><a href="https://scholar.google.com/citations?user=qyOolasAAAAJ&hl=en" target="_blank">Scholar</a></div>
+        <div id="node-email" class="rd-node email"><a href="mailto:aliya.bannaeva@gmail.com">Email</a></div>
     </div>
-
   </div>
   <div style="flex: 3; padding-right: 20px;">
     <p>Final semester master student at TU Munich. I did my thesis at the <a href="https://db.in.tum.de/">Chair for Database Systems</a> under the supervision of Altan Birler and Prof. Thomas Neumann, on multi-join cardinality estimation using sketches. My current focus is on adaptive query optimization. </p>
     <p>Outside of databases, my interests are mainly surrounding mathematics (concentration bounds) and materials science (crystallography). I'm always open to collaborating on interesting projects, please feel free to reach out for a chat.</p>
-    <p>[<a href="https://scholar.google.com/citations?user=qyOolasAAAAJ&hl=en">Google Scholar</a>] | [<a href="https://github.com/bannayeva">GitHub</a>] | [<a href="mailto:aliya.bannaeva@gmail.com">Email</a>]</p>
   </div>
   <div style="flex: 1;">
     <img src="/images/profile.png" alt="Aliya Bannayeva" style="border-radius: 50%; max-width: 100%; height: auto;">
@@ -134,47 +110,36 @@ permalink: /
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Main tree elements
-    const nameNode = document.getElementById('node-name');
-    const blogNode = document.getElementById('node-blog');
-    const cvNode = document.getElementById('node-cv');
-    const lineMainTop = document.getElementById('line-main-top');
-    const lineMainBottom = document.getElementById('line-main-bottom');
-    const lineMainBlog = document.getElementById('line-main-blog');
-    const lineMainCv = document.getElementById('line-main-cv');
-
-    // Sub-tree elements
-    const emailNode = document.getElementById('node-email');
-    const gsNode = document.getElementById('node-gs');
-    const ghNode = document.getElementById('node-gh');
-    const lineSubTop = document.getElementById('line-sub-top');
-    const lineSubBottom = document.getElementById('line-sub-bottom');
-    const lineSubGs = document.getElementById('line-sub-gs');
-    const lineSubGh = document.getElementById('line-sub-gh');
-
-    // --- Event Listeners ---
-    const highlight = (element, add) => {
-        if (element) {
-            add ? element.classList.add('highlight') : element.classList.remove('highlight');
-        }
+    const nodes = {
+        homepage: document.getElementById('node-homepage'), blog: document.getElementById('node-blog'),
+        cv: document.getElementById('node-cv'), github: document.getElementById('node-github'),
+        scholar: document.getElementById('node-scholar'), email: document.getElementById('node-email')
     };
-    
-    nameNode.addEventListener('mouseover', () => { highlight(lineMainBottom, true); highlight(lineMainTop, true); });
-    nameNode.addEventListener('mouseout', () => { highlight(lineMainBottom, false); highlight(lineMainTop, false); });
-
-    blogNode.addEventListener('mouseover', () => { highlight(lineMainBlog, true); highlight(lineMainTop, true); });
-    blogNode.addEventListener('mouseout', () => { highlight(lineMainBlog, false); highlight(lineMainTop, false); });
-
-    cvNode.addEventListener('mouseover', () => highlight(lineMainCv, true));
-    cvNode.addEventListener('mouseout', () => highlight(lineMainCv, false));
-    
-    emailNode.addEventListener('mouseover', () => { highlight(lineSubBottom, true); highlight(lineSubTop, true); });
-    emailNode.addEventListener('mouseout', () => { highlight(lineSubBottom, false); highlight(lineSubTop, false); });
-
-    gsNode.addEventListener('mouseover', () => { highlight(lineSubGs, true); highlight(lineSubTop, true); });
-    gsNode.addEventListener('mouseout', () => { highlight(lineSubGs, false); highlight(lineSubTop, false); });
-
-    ghNode.addEventListener('mouseover', () => highlight(lineSubGh, true));
-    ghNode.addEventListener('mouseout', () => highlight(lineSubGh, false));
+    const lines = {
+        j1h: document.getElementById('line-j1-h'), j1j2: document.getElementById('line-j1-j2'),
+        j2b: document.getElementById('line-j2-b'), j2j3: document.getElementById('line-j2-j3'),
+        j3c: document.getElementById('line-j3-c'), j3j4: document.getElementById('line-j3-j4'),
+        j4g: document.getElementById('line-j4-g'), j4j5: document.getElementById('line-j4-j5'),
+        j5s: document.getElementById('line-j5-s'), j5e: document.getElementById('line-j5-e')
+    };
+    const highlight = (line_ids, active) => {
+        line_ids.forEach(id => {
+            if (lines[id]) {
+                active ? lines[id].classList.add('highlight') : lines[id].classList.remove('highlight');
+            }
+        });
+    };
+    nodes.homepage.addEventListener('mouseover', () => highlight(['j1h'], true));
+    nodes.homepage.addEventListener('mouseout',  () => highlight(['j1h'], false));
+    nodes.blog.addEventListener('mouseover', () => highlight(['j2b', 'j1j2'], true));
+    nodes.blog.addEventListener('mouseout',  () => highlight(['j2b', 'j1j2'], false));
+    nodes.cv.addEventListener('mouseover', () => highlight(['j3c', 'j2j3', 'j1j2'], true));
+    nodes.cv.addEventListener('mouseout',  () => highlight(['j3c', 'j2j3', 'j1j2'], false));
+    nodes.github.addEventListener('mouseover', () => highlight(['j4g', 'j3j4', 'j2j3', 'j1j2'], true));
+    nodes.github.addEventListener('mouseout',  () => highlight(['j4g', 'j3j4', 'j2j3', 'j1j2'], false));
+    nodes.scholar.addEventListener('mouseover', () => highlight(['j5s', 'j4j5', 'j3j4', 'j2j3', 'j1j2'], true));
+    nodes.scholar.addEventListener('mouseout',  () => highlight(['j5s', 'j4j5', 'j3j4', 'j2j3', 'j1j2'], false));
+    nodes.email.addEventListener('mouseover', () => highlight(['j5e', 'j4j5', 'j3j4', 'j2j3', 'j1j2'], true));
+    nodes.email.addEventListener('mouseout',  () => highlight(['j5e', 'j4j5', 'j3j4', 'j2j3', 'j1j2'], false));
 });
 </script>
