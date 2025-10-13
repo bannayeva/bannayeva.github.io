@@ -1,146 +1,345 @@
----
-layout: single
-author_profile: false
-permalink: /
----
-<style>
-/* Final, definitive container for the user's SVG design */
-.svg-nav-container {
-    position: relative;
-    width: 100%;
-    max-width: 450px; /* Wider for the right-deep layout */
-    height: 380px;
-    margin: 0 auto;
-    font-family: monospace;
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Join Tree Navigation</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+        }
 
-.svg-nav-svg {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 1;
-}
+        .container {
+            display: flex;
+            align-items: flex-start;
+            max-width: 1200px;
+            margin: 0 auto;
+            gap: 30px;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
 
-.svg-nav-svg line {
-    stroke: #764ba2;
-    stroke-width: 2;
-    transition: all 0.2s ease-in-out;
-}
+        .tree-container {
+            flex: 2;
+            min-width: 500px;
+        }
 
-.svg-nav-svg line.highlight {
-    stroke: #333;
-    stroke-width: 3;
-}
+        .info-container {
+            flex: 3;
+            padding: 20px;
+        }
 
-.svg-node {
-    position: absolute;
-    transform: translate(-50%, -50%);
-    z-index: 2;
-    background: transparent !important;
-}
+        .profile-container {
+            flex: 1;
+            text-align: center;
+        }
 
-.svg-node a {
-    text-decoration: none;
-    font-weight: bold;
-    font-size: 1.1em;
-    padding: 0.1em 0.3em;
-    color: #333;
-    background: transparent !important;
-}
+        .profile-container img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
 
-.svg-node.join {
-    font-size: 2em;
-    color: #764ba2;
-    font-weight: bold;
-}
+        /* Tree styles */
+        .link {
+            fill: none;
+            stroke: #764ba2;
+            stroke-width: 2px;
+            transition: all 0.3s ease;
+        }
 
-/* --- Meticulous Positioning Based on User's SVG --- */
-.svg-node.j1 { top: 8%; left: 44.4%; } /* 400/900 */
-.svg-node.n-name { top: 20%; left: 27.7%; } /* 250/900 */
-.svg-node.j2 { top: 20%; left: 61.1%; } /* 550/900 */
-.svg-node.n-blog { top: 32%; left: 50%; } /* 450/900 */
-.svg-node.j3 { top: 32%; left: 72.2%; } /* 650/900 */
-.svg-node.n-cv { top: 44%; left: 61.1%; } /* 550/900 */
-.svg-node.j4 { top: 44%; left: 83.3%; } /* 750/900 */
-.svg-node.n-github { top: 56%; left: 72.2%; } /* 650/900 */
-.svg-node.j5 { top: 56%; left: 94.4%; } /* 850/900 -- Added Join */
-.svg-node.n-scholar { top: 68%; left: 83.3%; } /* 750/900 */
-.svg-node.n-email { top: 68%; left: 94.4%; } /* 850/900 */
-</style>
+        .link.highlighted {
+            stroke: #333;
+            stroke-width: 3px;
+        }
 
-<div style="display: flex; align-items: center; margin-top: 2em;">
-  <div style="flex: 2; padding-right: 20px;">
-    <div class="svg-nav-container">
-        <svg class="svg-nav-svg" viewBox="0 0 900 500" preserveAspectRatio="xMidYMid meet">
-            <line id="line-j1-name" x1="400" y1="45" x2="250" y2="95" />
-            <line id="line-j1-j2" x1="400" y1="45" x2="550" y2="95" />
-            <line id="line-j2-blog" x1="550" y1="105" x2="450" y2="155" />
-            <line id="line-j2-j3" x1="550" y1="105" x2="650" y2="155" />
-            <line id="line-j3-cv" x1="650" y1="165" x2="550" y2="215" />
-            <line id="line-j3-j4" x1="650" y1="165" x2="750" y2="215" />
-            <line id="line-j4-github" x1="750" y1="225" x2="650" y2="275" />
-            <line id="line-j4-j5" x1="750" y1="225" x2="850" y2="275" />
-            <line id="line-j5-scholar" x1="850" y1="285" x2="750" y2="335" />
-            <line id="line-j5-email" x1="850" y1="285" x2="850" y2="335" />
-        </svg>
+        .node {
+            cursor: pointer;
+        }
 
-        <!-- Nodes based on SVG -->
-        <div class="svg-node join j1">⋈</div>
-        <div id="node-name" class="svg-node n-name"><a href="/">Aliya Bannayeva</a></div>
-        <div class="svg-node join j2">⋈</div>
-        <div id="node-blog" class="svg-node n-blog"><a href="/blog/">Blog</a></div>
-        <div class="svg-node join j3">⋈</div>
-        <div id="node-cv" class="svg-node n-cv"><a href="/files/cv.pdf" target="_blank">CV</a></div>
-        <div class="svg-node join j4">⋈</div>
-        <div id="node-github" class="svg-node n-github"><a href="https://github.com/bannayeva" target="_blank">GitHub</a></div>
-        <div class="svg-node join j5">⋈</div>
-        <div id="node-scholar" class="svg-node n-scholar"><a href="https://scholar.google.com/citations?user=qyOolasAAAAJ&hl=en" target="_blank">Scholar</a></div>
-        <div id="node-email" class="svg-node n-email"><a href="mailto:aliya.bannaeva@gmail.com">Email</a></div>
+        .node circle {
+            fill: #fff;
+            stroke: #764ba2;
+            stroke-width: 2px;
+        }
+
+        .join-node {
+            font-size: 24px;
+            font-weight: bold;
+            fill: #764ba2;
+            font-family: "Courier New", monospace;
+        }
+
+        .leaf-node text {
+            font-size: 13px;
+            font-weight: 600;
+            fill: #333;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        .leaf-node:hover text {
+            fill: #764ba2;
+        }
+
+        h1 {
+            color: #333;
+            margin: 0 0 20px 0;
+        }
+
+        p {
+            line-height: 1.6;
+            color: #666;
+        }
+
+        a {
+            color: #764ba2;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        svg {
+            background: #fafafa;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="tree-container">
+            <svg id="tree-svg"></svg>
+        </div>
+        <div class="info-container">
+            <h1>Aliya Bannayeva</h1>
+            <p>Final semester master student at TU Munich. I did my thesis at the <a href="https://db.in.tum.de/">Chair for Database Systems</a> under the supervision of Altan Birler and Prof. Thomas Neumann, on multi-join cardinality estimation using sketches. My current focus is on adaptive query optimization.</p>
+            <p>Outside of databases, my interests are mainly surrounding mathematics (concentration bounds) and materials science (crystallography). I'm always open to collaborating on interesting projects, please feel free to reach out for a chat.</p>
+        </div>
+        <div class="profile-container">
+            <img src="/images/profile.png" alt="Aliya Bannayeva">
+        </div>
     </div>
-  </div>
-  <div style="flex: 3; padding-right: 20px;">
-    <p>Final semester master student at TU Munich. I did my thesis at the <a href="https://db.in.tum.de/">Chair for Database Systems</a> under the supervision of Altan Birler and Prof. Thomas Neumann, on multi-join cardinality estimation using sketches. My current focus is on adaptive query optimization. </p>
-    <p>Outside of databases, my interests are mainly surrounding mathematics (concentration bounds) and materials science (crystallography). I'm always open to collaborating on interesting projects, please feel free to reach out for a chat.</p>
-  </div>
-  <div style="flex: 1;">
-    <img src="/images/profile.png" alt="Aliya Bannayeva" style="border-radius: 50%; max-width: 100%; height: auto;">
-  </div>
-</div>
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const nodes = {
-        name: document.getElementById('node-name'), blog: document.getElementById('node-blog'),
-        cv: document.getElementById('node-cv'), github: document.getElementById('node-github'),
-        scholar: document.getElementById('node-scholar'), email: document.getElementById('node-email')
-    };
-    const lines = {
-        j1name: document.getElementById('line-j1-name'), j1j2: document.getElementById('line-j1-j2'),
-        j2blog: document.getElementById('line-j2-blog'), j2j3: document.getElementById('line-j2-j3'),
-        j3cv: document.getElementById('line-j3-cv'), j3j4: document.getElementById('line-j3-j4'),
-        j4github: document.getElementById('line-j4-github'), j4j5: document.getElementById('line-j4-j5'),
-        j5scholar: document.getElementById('line-j5-scholar'), j5email: document.getElementById('line-j5-email')
-    };
-    const highlight = (line_ids, active) => {
-        line_ids.forEach(id => {
-            if (lines[id]) {
-                active ? lines[id].classList.add('highlight') : lines[id].classList.remove('highlight');
+    <script>
+        // Tree data structure
+        const treeData = {
+            name: "⋈",
+            type: "join",
+            children: [
+                {
+                    name: "Aliya Bannayeva",
+                    type: "leaf",
+                    url: "/"
+                },
+                {
+                    name: "⋈",
+                    type: "join",
+                    children: [
+                        {
+                            name: "Blog",
+                            type: "leaf",
+                            url: "/blog/"
+                        },
+                        {
+                            name: "⋈",
+                            type: "join",
+                            children: [
+                                {
+                                    name: "CV",
+                                    type: "leaf",
+                                    url: "/files/cv.pdf",
+                                    target: "_blank"
+                                },
+                                {
+                                    name: "⋈",
+                                    type: "join",
+                                    children: [
+                                        {
+                                            name: "GitHub",
+                                            type: "leaf",
+                                            url: "https://github.com/bannayeva",
+                                            target: "_blank"
+                                        },
+                                        {
+                                            name: "⋈",
+                                            type: "join",
+                                            children: [
+                                                {
+                                                    name: "Scholar",
+                                                    type: "leaf",
+                                                    url: "https://scholar.google.com/citations?user=qyOolasAAAAJ&hl=en",
+                                                    target: "_blank"
+                                                },
+                                                {
+                                                    name: "Email",
+                                                    type: "leaf",
+                                                    url: "mailto:aliya.bannaeva@gmail.com"
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // Set dimensions and margins - increased for better spacing
+        const margin = {top: 40, right: 40, bottom: 40, left: 40};
+        const width = 550 - margin.left - margin.right;
+        const height = 420 - margin.top - margin.bottom;
+
+        // Create SVG
+        const svg = d3.select("#tree-svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom);
+
+        const g = svg.append("g")
+            .attr("transform", `translate(${margin.left},${margin.top})`);
+
+        // Create tree layout with fixed node positions for equal edge lengths
+        const treemap = d3.tree()
+            .size([width, height])
+            .separation(() => 1); // Uniform separation
+
+        // Convert to hierarchy
+        const root = d3.hierarchy(treeData);
+        const treeNodes = treemap(root);
+
+        // Manually adjust positions for equal edge lengths
+        const nodes = treeNodes.descendants();
+        const edgeLength = 60; // Fixed edge length
+        const horizontalSpacing = 100; // Increased horizontal spacing between siblings
+
+        // Custom positioning for equal edge lengths with better horizontal spacing
+        nodes.forEach(node => {
+            if (node.depth === 0) {
+                // Root node at top center
+                node.x = width / 2;
+                node.y = 20;
+            } else if (node.depth === 1) {
+                // First level children - much wider spacing
+                if (node.parent.children.indexOf(node) === 0) {
+                    node.x = node.parent.x - horizontalSpacing;
+                } else {
+                    node.x = node.parent.x + horizontalSpacing;
+                }
+                node.y = node.parent.y + edgeLength;
+            } else {
+                // For deeper levels, maintain good horizontal spacing
+                if (node.parent.children && node.parent.children.length === 2) {
+                    const index = node.parent.children.indexOf(node);
+                    // Maintain consistent horizontal spacing at each level
+                    const offset = horizontalSpacing / Math.pow(1.3, node.depth - 1);
+                    node.x = node.parent.x + (index === 0 ? -offset : offset);
+                } else {
+                    node.x = node.parent.x;
+                }
+                node.y = node.parent.y + edgeLength;
             }
         });
-    };
-    nodes.name.addEventListener('mouseover', () => highlight(['j1name'], true));
-    nodes.name.addEventListener('mouseout',  () => highlight(['j1name'], false));
-    nodes.blog.addEventListener('mouseover', () => highlight(['j2blog', 'j1j2'], true));
-    nodes.blog.addEventListener('mouseout',  () => highlight(['j2blog', 'j1j2'], false));
-    nodes.cv.addEventListener('mouseover', () => highlight(['j3cv', 'j2j3', 'j1j2'], true));
-    nodes.cv.addEventListener('mouseout',  () => highlight(['j3cv', 'j2j3', 'j1j2'], false));
-    nodes.github.addEventListener('mouseover', () => highlight(['j4github', 'j3j4', 'j2j3', 'j1j2'], true));
-    nodes.github.addEventListener('mouseout',  () => highlight(['j4github', 'j3j4', 'j2j3', 'j1j2'], false));
-    nodes.scholar.addEventListener('mouseover', () => highlight(['j5scholar', 'j4j5', 'j3j4', 'j2j3', 'j1j2'], true));
-    nodes.scholar.addEventListener('mouseout',  () => highlight(['j5scholar', 'j4j5', 'j3j4', 'j2j3', 'j1j2'], false));
-    nodes.email.addEventListener('mouseover', () => highlight(['j5email', 'j4j5', 'j3j4', 'j2j3', 'j1j2'], true));
-    nodes.email.addEventListener('mouseout',  () => highlight(['j5email', 'j4j5', 'j3j4', 'j2j3', 'j1j2'], false));
-});
-</script>
+
+        // Special handling for the last level to prevent overlap
+        const lastLevelNodes = nodes.filter(n => !n.children);
+        const scholarNode = lastLevelNodes.find(n => n.data.name === "Scholar");
+        const emailNode = lastLevelNodes.find(n => n.data.name === "Email");
+        if (scholarNode && emailNode) {
+            const parentX = scholarNode.parent.x;
+            scholarNode.x = parentX - 50;
+            emailNode.x = parentX + 50;
+        }
+
+        const links = treeNodes.links();
+
+        // Add links (edges) - with uniform offset for equal visual length
+        const link = g.selectAll(".link")
+            .data(links)
+            .enter().append("line")
+            .attr("class", "link")
+            .attr("x1", d => d.source.x)
+            .attr("y1", d => d.source.y + 12)
+            .attr("x2", d => d.target.x)
+            .attr("y2", d => d.target.y - 12);
+
+        // Add nodes
+        const node = g.selectAll(".node")
+            .data(nodes)
+            .enter().append("g")
+            .attr("class", d => d.data.type === "join" ? "node join-node" : "node leaf-node")
+            .attr("transform", d => `translate(${d.x},${d.y})`);
+
+        // Add join symbols for join nodes
+        node.filter(d => d.data.type === "join")
+            .append("text")
+            .attr("text-anchor", "middle")
+            .attr("dy", "0.35em")
+            .text(d => d.data.name);
+
+        // Add text for leaf nodes with better positioning
+        const leafNodes = node.filter(d => d.data.type === "leaf");
+
+        leafNodes.append("text")
+            .attr("text-anchor", "middle")
+            .attr("dy", d => d.children ? "-0.5em" : "0.35em")
+            .text(d => d.data.name);
+
+        // Make leaf nodes clickable
+        leafNodes
+            .style("cursor", "pointer")
+            .on("click", (event, d) => {
+                if (d.data.url) {
+                    if (d.data.target === "_blank") {
+                        window.open(d.data.url, "_blank");
+                    } else {
+                        window.location.href = d.data.url;
+                    }
+                }
+            });
+
+        // Add hover effects
+        leafNodes.on("mouseover", function(event, d) {
+            // Highlight path from root to this node
+            const pathToRoot = [];
+            let current = d;
+            while (current.parent) {
+                pathToRoot.push(current);
+                current = current.parent;
+            }
+            
+            link.classed("highlighted", l => {
+                return pathToRoot.some(node => 
+                    l.target === node || 
+                    (l.source === node.parent && l.target === node)
+                );
+            });
+        })
+        .on("mouseout", function() {
+            link.classed("highlighted", false);
+        });
+
+        // Optional: Add animation on load
+        link.style("opacity", 0)
+            .transition()
+            .duration(500)
+            .delay((d, i) => i * 50)
+            .style("opacity", 1);
+
+        node.style("opacity", 0)
+            .transition()
+            .duration(500)
+            .delay((d, i) => i * 30)
+            .style("opacity", 1);
+    </script>
+</body>
+</html>
