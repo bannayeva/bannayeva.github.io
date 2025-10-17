@@ -1,0 +1,266 @@
+<div class="navigation-tree-container">
+    <h3>Navigation</h3>
+    <div class="tree-wrapper">
+        <svg id="nav-tree-svg"></svg>
+    </div>
+</div>
+
+<style>
+    .navigation-tree-container {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 30px;
+        border: 1px solid #e9ecef;
+    }
+    
+    .navigation-tree-container h3 {
+        margin: 0 0 15px 0;
+        color: #333;
+        font-size: 16px;
+        font-weight: 600;
+    }
+    
+    .tree-wrapper {
+        width: 100%;
+        height: 300px;
+        overflow: visible;
+    }
+    
+    #nav-tree-svg {
+        width: 100%;
+        height: 100%;
+        background: white;
+        border-radius: 4px;
+    }
+    
+    .nav-link {
+        fill: none;
+        stroke: #764ba2;
+        stroke-width: 2px;
+        transition: all 0.3s ease;
+    }
+    
+    .nav-link.highlighted {
+        stroke: #333;
+        stroke-width: 3px;
+    }
+    
+    .nav-node {
+        cursor: pointer;
+    }
+    
+    .nav-join-node {
+        font-size: 18px;
+        font-weight: bold;
+        fill: #764ba2;
+        font-family: "Courier New", monospace;
+    }
+    
+    .nav-leaf-node text {
+        font-size: 11px;
+        font-weight: 600;
+        fill: #333;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+    
+    .nav-leaf-node:hover text {
+        fill: #764ba2;
+    }
+</style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const treeData = {
+            name: "⋈",
+            type: "join",
+            children: [
+                {
+                    name: "Home",
+                    type: "leaf",
+                    url: "/"
+                },
+                {
+                    name: "⋈",
+                    type: "join",
+                    children: [
+                        {
+                            name: "Blog",
+                            type: "leaf",
+                            url: "/blog/"
+                        },
+                        {
+                            name: "⋈",
+                            type: "join",
+                            children: [
+                                {
+                                    name: "CV",
+                                    type: "leaf",
+                                    url: "/files/cv.pdf",
+                                    target: "_blank"
+                                },
+                                {
+                                    name: "⋈",
+                                    type: "join",
+                                    children: [
+                                        {
+                                            name: "GitHub",
+                                            type: "leaf",
+                                            url: "https://github.com/bannayeva",
+                                            target: "_blank"
+                                        },
+                                        {
+                                            name: "⋈",
+                                            type: "join",
+                                            children: [
+                                                {
+                                                    name: "Scholar",
+                                                    type: "leaf",
+                                                    url: "https://scholar.google.com/citations?user=qyOolasAAAAJ&hl=en",
+                                                    target: "_blank"
+                                                },
+                                                {
+                                                    name: "Email",
+                                                    type: "leaf",
+                                                    url: "mailto:aliya.bannaeva@gmail.com"
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        };
+
+        const margin = {top: 20, right: 20, bottom: 20, left: 10};
+        const width = 280 - margin.left - margin.right;
+        const height = 250 - margin.top - margin.bottom;
+
+        const svg = d3.select("#nav-tree-svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom);
+
+        const g = svg.append("g")
+            .attr("transform", `translate(${margin.left},${margin.top})`);
+
+        const treemap = d3.tree()
+            .size([width, height])
+            .separation(() => 1);
+
+        const root = d3.hierarchy(treeData);
+        const treeNodes = treemap(root);
+
+        const nodes = treeNodes.descendants();
+        const edgeLength = 30;
+        const horizontalSpacing = 35;
+
+        nodes.forEach(node => {
+            if (node.depth === 0) {
+                node.x = width / 2;
+                node.y = 15;
+            } else if (node.depth === 1) {
+                if (node.parent.children.indexOf(node) === 0) {
+                    node.x = node.parent.x - horizontalSpacing;
+                } else {
+                    node.x = node.parent.x + horizontalSpacing;
+                }
+                node.y = node.parent.y + edgeLength;
+            } else {
+                if (node.parent.children && node.parent.children.length === 2) {
+                    const index = node.parent.children.indexOf(node);
+                    const offset = horizontalSpacing / Math.pow(1.2, node.depth - 1);
+                    node.x = node.parent.x + (index === 0 ? -offset : offset);
+                } else {
+                    node.x = node.parent.x;
+                }
+                node.y = node.parent.y + edgeLength;
+            }
+        });
+
+        const lastLevelNodes = nodes.filter(n => !n.children);
+        const scholarNode = lastLevelNodes.find(n => n.data.name === "Scholar");
+        const emailNode = lastLevelNodes.find(n => n.data.name === "Email");
+        if (scholarNode && emailNode) {
+            const parentX = scholarNode.parent.x;
+            scholarNode.x = parentX - 25;
+            emailNode.x = parentX + 25;
+        }
+
+        const links = treeNodes.links();
+
+        const link = g.selectAll(".nav-link")
+            .data(links)
+            .enter().append("line")
+            .attr("class", "nav-link")
+            .attr("x1", d => d.source.x)
+            .attr("y1", d => d.source.y + 8)
+            .attr("x2", d => d.target.x)
+            .attr("y2", d => d.target.y - 8);
+
+        const node = g.selectAll(".nav-node")
+            .data(nodes)
+            .enter().append("g")
+            .attr("class", d => d.data.type === "join" ? "nav-node nav-join-node" : "nav-node nav-leaf-node")
+            .attr("transform", d => `translate(${d.x},${d.y})`);
+
+        node.filter(d => d.data.type === "join")
+            .append("text")
+            .attr("text-anchor", "middle")
+            .attr("dy", "0.35em")
+            .text(d => d.data.name);
+
+        const leafNodes = node.filter(d => d.data.type === "leaf");
+
+        leafNodes.append("text")
+            .attr("text-anchor", "middle")
+            .attr("dy", d => d.children ? "-0.5em" : "0.35em")
+            .text(d => d.data.name);
+
+        leafNodes
+            .style("cursor", "pointer")
+            .on("click", (event, d) => {
+                if (d.data.url) {
+                    if (d.data.target === "_blank") {
+                        window.open(d.data.url, "_blank");
+                    } else {
+                        window.location.href = d.data.url;
+                    }
+                }
+            });
+
+        leafNodes.on("mouseover", function(event, d) {
+            const pathToRoot = [];
+            let current = d;
+            while (current.parent) {
+                pathToRoot.push(current);
+                current = current.parent;
+            }
+            
+            link.classed("highlighted", l => {
+                return pathToRoot.some(node => 
+                    l.target === node || 
+                    (l.source === node.parent && l.target === node)
+                );
+            });
+        })
+        .on("mouseout", function() {
+            link.classed("highlighted", false);
+        });
+
+        link.style("opacity", 0)
+            .transition()
+            .duration(500)
+            .delay((d, i) => i * 30)
+            .style("opacity", 1);
+
+        node.style("opacity", 0)
+            .transition()
+            .duration(500)
+            .delay((d, i) => i * 20)
+            .style("opacity", 1);
+    });
+</script>
