@@ -3,6 +3,5 @@ layout: archive
 title: "Blog"
 permalink: /blog/
 author_profile: false
----
-
-{% include navigation-tree.html %} 
+sidebar:
+  - text: "{% include navigation-tree.html %}" 
