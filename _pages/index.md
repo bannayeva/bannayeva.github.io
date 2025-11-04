@@ -4,299 +4,222 @@ title: "Aliya Bannayeva"
 permalink: /
 ---
 
-<div class="container">
-    <div class="tree-container">
-        <svg id="tree-svg"></svg>
-    </div>
-    <div class="info-container">
-        <h1>Aliya Bannayeva</h1>
-        <p>Final semester master student at TU Munich. I did my thesis at the <a href="https://db.in.tum.de/">Chair for Database Systems</a> under the supervision of Altan Birler and Prof. Thomas Neumann, on multi-join cardinality estimation using sketches. My current focus is on adaptive query optimization.</p>
-        <p>Outside of databases, my interests are mainly surrounding mathematics (concentration bounds) and materials science (crystallography). I'm always open to collaborating on interesting projects, please feel free to reach out for a chat.</p>
-    </div>
-    <div class="profile-container">
-        <img src="{{ site.url }}/images/profile.png" alt="Aliya Bannayeva">
-    </div>
+<div class="query-plan-container">
+    <svg id="query-plan-svg"></svg>
 </div>
 
 <style>
-    .container {
-        display: flex;
-        align-items: flex-start;
-        max-width: 1400px;
-        margin: 0 auto;
-        gap: 30px;
-        background: white;
-        padding: 30px;
-        border-radius: 10px;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    }
-
-    .tree-container {
-        flex: 0 0 400px;
-        width: 400px;
-        overflow: visible;
-    }
-
-    .info-container {
-        flex: 5;
+    .query-plan-container {
+        max-width: 1200px;
+        margin: 40px auto;
         padding: 20px;
-        min-width: 0;
-    }
-
-    .profile-container {
-        flex: 0 0 150px;
-        text-align: center;
         display: flex;
-        flex-direction: column;
         justify-content: center;
-        align-items: center;
-        margin-top: 100px;
     }
 
-    .profile-container img {
-        width: 150px;
-        height: 150px;
-        border-radius: 50%;
-        object-fit: cover;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    #query-plan-svg {
+        font-family: "Courier New", monospace;
+        font-size: 11px;
+        background: transparent;
     }
 
-    .link {
-        fill: none;
-        stroke: #764ba2;
-        stroke-width: 2px;
-        transition: all 0.3s ease;
+    .ascii-text {
+        fill: #2d5016;
+        font-family: "Courier New", monospace;
+        font-size: 11px;
+        white-space: pre;
     }
 
-    .link.highlighted {
-        stroke: #333;
-        stroke-width: 3px;
-    }
-
-    .node {
+    .ascii-link {
+        fill: #228b22;
+        font-weight: bold;
         cursor: pointer;
     }
 
-    .node circle {
-        fill: #fff;
-        stroke: #764ba2;
-        stroke-width: 2px;
+    .ascii-link:hover {
+        fill: #006400;
     }
 
-    .join-node {
-        font-size: 24px;
-        font-weight: bold;
-        fill: #764ba2;
-        font-family: "Courier New", monospace;
+    .ascii-operator {
+        fill: #556b2f;
     }
 
-    .leaf-node text {
-        font-size: 13px;
-        font-weight: 600;
-        fill: #333;
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    .ascii-scan {
+        fill: #228b22;
     }
 
-    .leaf-node:hover text {
-        fill: #764ba2;
-    }
-
-    svg {
-        background: white;
-        border-radius: 8px;
+    .ascii-card {
+        fill: #6b8e23;
     }
 </style>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
 <script>
-    const treeData = {
-        name: "⋈",
-        type: "join",
-        children: [
-            {
-                name: "Aliya Bannayeva",
-                type: "leaf",
-                url: "/"
-            },
-            {
-                name: "⋈",
-                type: "join",
-                children: [
-                    {
-                        name: "Blog",
-                        type: "leaf",
-                        url: "/blog/"
-                    },
-                    {
-                        name: "⋈",
-                        type: "join",
-                        children: [
-                            {
-                                name: "CV",
-                                type: "leaf",
-                                url: "/files/cv.pdf",
-                                target: "_blank"
-                            },
-                            {
-                                name: "⋈",
-                                type: "join",
-                                children: [
-                                    {
-                                        name: "GitHub",
-                                        type: "leaf",
-                                        url: "https://github.com/bannayeva",
-                                        target: "_blank"
-                                    },
-                                    {
-                                        name: "⋈",
-                                        type: "join",
-                                        children: [
-                                            {
-                                                name: "Scholar",
-                                                type: "leaf",
-                                                url: "https://scholar.google.com/citations?user=qyOolasAAAAJ&hl=en",
-                                                target: "_blank"
-                                            },
-                                            {
-                                                name: "Email",
-                                                type: "leaf",
-                                                url: "mailto:aliya.bannaeva@gmail.com"
-                                            }
-                                        ]
-                                    }
-                                ]
-                            }
-                        ]
-                    }
-                ]
-            }
-        ]
-    };
-
-    const margin = {top: 30, right: 30, bottom: 30, left: 0};
-    const width = 360 - margin.left - margin.right;
-    const height = 400 - margin.top - margin.bottom;
-
-    const svg = d3.select("#tree-svg")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom);
+(function() {
+    const svg = d3.select("#query-plan-svg");
+    const container = d3.select(".query-plan-container");
+    
+    const asciiArt = [
+        "                    +----------------+",
+        "                    | aliya bannayeva|",
+        "                    | card 5         |",
+        "                    +-------o--------+",
+        "                            |",
+        "                    +-------o--------+",
+        "                    | append         |",
+        "                    | card 5         |",
+        "                    +-------o--------+",
+        "                            |",
+        "",
+        "",
+        "+----o-----+ +---o----+ +---o---+ +-----o----+ +---o----+",
+        "| seq      | | index  | | bitmap| | index    | | index  |",
+        "| scan     | | scan   | | scan  | | scan     | | scan   |",
+        "| cv       | | blog   | | github| | scholar  | | email  |",
+        "| card 1   | | card 1 | | card 9| | card 1   | | card 1 |",
+        "+----------+ +--------+ +-------+ +----------+ +--------+"
+    ];
+    
+    function renderQueryPlan() {
+        const charWidth = 6.6;
+        const lineHeight = 13.2;
+        
+        const boxLine = "+----o-----+ +---o----+ +---o---+ +-----o----+ +---o----+";
+        const oPositions = [6, 17, 28, 40, 51];
+        const centerPos = 28;
+        const minPos = 0;
+        const lastOPos = Math.max(...oPositions);
+        const maxPos = lastOPos + 4;
+        
+        const connectorLine1 = Array(maxPos + 1).fill(' ').map((_, idx) => {
+            if (idx < minPos) return ' ';
+            if (idx === minPos) return '+';
+            if (idx === centerPos) return '+';
+            if (oPositions.includes(idx)) return '+';
+            if (idx === maxPos) return '+';
+            if (idx <= maxPos) return '-';
+            return ' ';
+        }).join('');
+        
+        const connectorLine2 = Array(maxPos + 1).fill(' ').map((_, idx) => {
+            if (idx === centerPos) return '|';
+            if (oPositions.includes(idx)) return '|';
+            return ' ';
+        }).join('');
+        
+        const asciiArtWithConnector = [
+            "                    +----------------+",
+            "                    | aliya bannayeva|",
+            "                    | card 5         |",
+            "                    +-------o--------+",
+            "                            |",
+            "                    +-------o--------+",
+            "                    | append         |",
+            "                    | card 5         |",
+            "                    +-------o--------+",
+            "                            |",
+            connectorLine1,
+            connectorLine2,
+            boxLine,
+            "| seq      | | index  | | bitmap| | index    | | index  |",
+            "| scan     | | scan   | | scan  | | scan     | | scan   |",
+            "| cv       | | blog   | | github| | scholar  | | email  |",
+            "| card 1   | | card 1 | | card 9| | card 1   | | card 1 |",
+            "+----------+ +--------+ +-------+ +----------+ +--------+"
+        ];
+        
+        const maxLineLength = d3.max(asciiArtWithConnector.map(l => l.length));
+        const svgWidth = maxLineLength * charWidth + 40;
+        const svgHeight = asciiArtWithConnector.length * lineHeight + 40;
+        
+        svg.attr("width", svgWidth)
+           .attr("height", svgHeight);
+        
+        svg.selectAll("*").remove();
 
     const g = svg.append("g")
-        .attr("transform", `translate(${margin.left},${margin.top})`);
-
-    const treemap = d3.tree()
-        .size([width, height])
-        .separation(() => 1);
-
-    const root = d3.hierarchy(treeData);
-    const treeNodes = treemap(root);
-
-        const nodes = treeNodes.descendants();
-        const edgeLength = 35;
-        const horizontalSpacing = 45;
-
-    nodes.forEach(node => {
-        if (node.depth === 0) {
-            node.x = width / 2;
-            node.y = 20;
-        } else if (node.depth === 1) {
-            if (node.parent.children.indexOf(node) === 0) {
-                node.x = node.parent.x - horizontalSpacing;
-            } else {
-                node.x = node.parent.x + horizontalSpacing;
-            }
-            node.y = node.parent.y + edgeLength;
-        } else {
-            if (node.parent.children && node.parent.children.length === 2) {
-                const index = node.parent.children.indexOf(node);
-                const offset = horizontalSpacing / Math.pow(1.3, node.depth - 1);
-                node.x = node.parent.x + (index === 0 ? -offset : offset);
-            } else {
-                node.x = node.parent.x;
-            }
-            node.y = node.parent.y + edgeLength;
-        }
-    });
-
-    const lastLevelNodes = nodes.filter(n => !n.children);
-    const scholarNode = lastLevelNodes.find(n => n.data.name === "Scholar");
-    const emailNode = lastLevelNodes.find(n => n.data.name === "Email");
-    if (scholarNode && emailNode) {
-        const parentX = scholarNode.parent.x;
-        scholarNode.x = parentX - 50;
-        emailNode.x = parentX + 50;
-    }
-
-    const links = treeNodes.links();
-
-    const link = g.selectAll(".link")
-        .data(links)
-        .enter().append("line")
-        .attr("class", "link")
-        .attr("x1", d => d.source.x)
-        .attr("y1", d => d.source.y + 12)
-        .attr("x2", d => d.target.x)
-        .attr("y2", d => d.target.y - 12);
-
-    const node = g.selectAll(".node")
-        .data(nodes)
-        .enter().append("g")
-        .attr("class", d => d.data.type === "join" ? "node join-node" : "node leaf-node")
-        .attr("transform", d => `translate(${d.x},${d.y})`);
-
-    node.filter(d => d.data.type === "join")
-        .append("text")
-        .attr("text-anchor", "middle")
-        .attr("dy", "0.35em")
-        .text(d => d.data.name);
-
-    const leafNodes = node.filter(d => d.data.type === "leaf");
-
-    leafNodes.append("text")
-        .attr("text-anchor", "middle")
-        .attr("dy", d => d.children ? "-0.5em" : "0.35em")
-        .text(d => d.data.name);
-
-    leafNodes
-        .style("cursor", "pointer")
-        .on("click", (event, d) => {
-            if (d.data.url) {
-                if (d.data.target === "_blank") {
-                    window.open(d.data.url, "_blank");
-                } else {
-                    window.location.href = d.data.url;
-                }
-            }
-        });
-
-    leafNodes.on("mouseover", function(event, d) {
-        const pathToRoot = [];
-        let current = d;
-        while (current.parent) {
-            pathToRoot.push(current);
-            current = current.parent;
-        }
+            .attr("transform", "translate(20, 20)");
         
-        link.classed("highlighted", l => {
-            return pathToRoot.some(node => 
-                l.target === node || 
-                (l.source === node.parent && l.target === node)
-            );
+        asciiArtWithConnector.forEach((line, i) => {
+            
+            const baseText = g.append("text")
+                .attr("class", "ascii-text")
+                .attr("x", 0)
+                .attr("y", (i + 1) * lineHeight)
+                .attr("xml:space", "preserve")
+                .text(line);
+            
+            if (line.includes('aliya bannayeva')) {
+                const startX = line.indexOf('aliya bannayeva') * charWidth;
+                g.append("text")
+                    .attr("class", "ascii-link")
+                    .attr("x", startX)
+                    .attr("y", (i + 1) * lineHeight)
+                    .text("aliya bannayeva")
+                    .style("cursor", "pointer")
+                    .on("click", () => window.location.href = "/about/");
+            }
+            
+            if (line.includes('cv') && line.includes('| cv')) {
+                const startX = line.indexOf('cv') * charWidth;
+                g.append("text")
+                    .attr("class", "ascii-link")
+                    .attr("x", startX)
+                    .attr("y", (i + 1) * lineHeight)
+                    .text("cv")
+                    .style("cursor", "pointer")
+                    .on("click", () => window.open("/files/cv.pdf", "_blank"));
+            }
+            
+            if (line.includes('blog') && line.includes('| blog')) {
+                const startX = line.indexOf('blog') * charWidth;
+                g.append("text")
+                    .attr("class", "ascii-link")
+                    .attr("x", startX)
+                    .attr("y", (i + 1) * lineHeight)
+                    .text("blog")
+                    .style("cursor", "pointer")
+                    .on("click", () => window.location.href = "/blog/");
+            }
+            
+            if (line.includes('github') && line.includes('| github')) {
+                const startX = line.indexOf('github') * charWidth;
+                g.append("text")
+                    .attr("class", "ascii-link")
+                    .attr("x", startX)
+                    .attr("y", (i + 1) * lineHeight)
+                    .text("github")
+                    .style("cursor", "pointer")
+                    .on("click", () => window.open("https://github.com/bannayeva", "_blank"));
+            }
+            
+            if (line.includes('scholar') && line.includes('| scholar')) {
+                const startX = line.indexOf('scholar') * charWidth;
+                g.append("text")
+                    .attr("class", "ascii-link")
+                    .attr("x", startX)
+                    .attr("y", (i + 1) * lineHeight)
+                    .text("scholar")
+                    .style("cursor", "pointer")
+                    .on("click", () => window.open("https://scholar.google.com/citations?user=qyOolasAAAAJ&hl=en", "_blank"));
+            }
+            
+            if (line.includes('email') && line.includes('| email')) {
+                const startX = line.indexOf('email') * charWidth;
+                g.append("text")
+                    .attr("class", "ascii-link")
+                    .attr("x", startX)
+                    .attr("y", (i + 1) * lineHeight)
+                    .text("email")
+        .style("cursor", "pointer")
+                    .on("click", () => window.location.href = "mailto:aliya.bannayeva@tum.de");
+            }
         });
-    })
-    .on("mouseout", function() {
-        link.classed("highlighted", false);
+    }
+    
+    renderQueryPlan();
+    window.addEventListener("resize", () => {
+        setTimeout(renderQueryPlan, 100);
     });
-
-    link.style("opacity", 0)
-        .transition()
-        .duration(500)
-        .delay((d, i) => i * 50)
-        .style("opacity", 1);
-
-    node.style("opacity", 0)
-        .transition()
-        .duration(500)
-        .delay((d, i) => i * 30)
-        .style("opacity", 1);
+})();
 </script>
