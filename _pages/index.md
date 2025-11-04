@@ -87,39 +87,52 @@ permalink: /
     }
 </style>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
 <script>
 (function() {
-    const svg = d3.select("#query-plan-svg");
-    const container = d3.select(".query-plan-container");
+    'use strict';
     
-    const asciiArt = [
-        "                    +----------------+",
-        "                    | aliya bannayeva|",
-        "                    | card 5         |",
-        "                    +-------o--------+",
-        "                            |",
-        "                    +-------o--------+",
-        "                    | append         |",
-        "                    | card 5         |",
-        "                    +-------o--------+",
-        "                            |",
-        "",
-        "",
-        "+----o-----+ +---o----+ +---o---+ +-----o----+ +---o----+",
-        "| seq      | | index  | | bitmap| | index    | | index  |",
-        "| scan     | | scan   | | scan  | | scan     | | scan   |",
-        "| cv       | | blog   | | github| | scholar  | | email  |",
-        "| card 1   | | card 1 | | card 9| | card 1   | | card 1 |",
-        "+----------+ +--------+ +-------+ +----------+ +--------+"
-    ];
+    function createSVGElement(tag, attributes) {
+        const element = document.createElementNS('http://www.w3.org/2000/svg', tag);
+        for (const key in attributes) {
+            if (attributes.hasOwnProperty(key)) {
+                element.setAttribute(key, attributes[key]);
+            }
+        }
+        return element;
+    }
+    
+    function createTextElement(x, y, text, className, fill, opacity) {
+        const textEl = createSVGElement('text', {
+            'class': className,
+            'x': String(x),
+            'y': String(y),
+            'xml:space': 'preserve',
+            'font-family': '"Courier New", monospace',
+            'font-size': '11px'
+        });
+        if (fill) textEl.setAttribute('fill', fill);
+        if (opacity !== undefined) textEl.setAttribute('opacity', opacity);
+        textEl.textContent = text;
+        return textEl;
+    }
     
     function renderQueryPlan() {
+        const svg = document.getElementById('query-plan-svg');
+        if (!svg) {
+            console.error('SVG element not found');
+            return;
+        }
+        
         const isMobile = window.innerWidth < 768;
         const isSmallMobile = window.innerWidth < 480;
         
         const charWidth = isSmallMobile ? 5.3 : (isMobile ? 5.9 : 6.6);
         const lineHeight = isSmallMobile ? 10.6 : (isMobile ? 11.9 : 13.2);
+        
+        if (isNaN(charWidth) || isNaN(lineHeight) || charWidth <= 0 || lineHeight <= 0) {
+            console.error('Invalid dimensions:', { charWidth, lineHeight });
+            return;
+        }
         
         const boxLine = "+----o-----+ +---o----+ +---o---+ +-----o----+ +---o----+";
         const oPositions = [6, 17, 28, 40, 51];
@@ -165,23 +178,46 @@ permalink: /
             "+----------+ +--------+ +-------+ +----------+ +--------+"
         ];
         
-        const maxLineLength = d3.max(asciiArtWithConnector.map(l => l.length));
+        const maxLineLength = Math.max(...asciiArtWithConnector.map(l => l.length));
+        if (!maxLineLength || maxLineLength <= 0) {
+            console.error('Invalid maxLineLength:', maxLineLength);
+            return;
+        }
+        
         const queryPlanWidth = maxLineLength * charWidth;
         const queryPlanHeight = asciiArtWithConnector.length * lineHeight;
+        
+        if (isNaN(queryPlanWidth) || isNaN(queryPlanHeight) || queryPlanWidth <= 0 || queryPlanHeight <= 0) {
+            console.error('Invalid query plan dimensions:', { queryPlanWidth, queryPlanHeight });
+            return;
+        }
         
         const padding = isMobile ? 50 : (isSmallMobile ? 30 : 200);
         const svgWidth = Math.max(queryPlanWidth + padding * 2, window.innerWidth - 20);
         const svgHeight = queryPlanHeight + padding * 3 + (isMobile ? 200 : 400);
         
+        if (isNaN(svgWidth) || isNaN(svgHeight) || svgWidth <= 0 || svgHeight <= 0) {
+            console.error('Invalid SVG dimensions:', { svgWidth, svgHeight });
+            return;
+        }
+        
         const queryPlanStartX = (svgWidth - queryPlanWidth) / 2;
         const queryPlanStartY = padding;
         
-        svg.attr("width", svgWidth)
-           .attr("height", svgHeight);
+        if (isNaN(queryPlanStartX) || isNaN(queryPlanStartY)) {
+            console.error('Invalid start positions:', { queryPlanStartX, queryPlanStartY });
+            return;
+        }
         
-        svg.selectAll("*").remove();
-
-        const sceneryG = svg.append("g").attr("class", "scenery");
+        svg.setAttribute('width', svgWidth);
+        svg.setAttribute('height', svgHeight);
+        
+        while (svg.firstChild) {
+            svg.removeChild(svg.firstChild);
+        }
+        
+        const sceneryG = createSVGElement('g', { 'class': 'scenery' });
+        svg.appendChild(sceneryG);
         
         const bigCloud = [
             "           __",
@@ -206,14 +242,8 @@ permalink: /
         
         clouds.forEach(cloud => {
             cloud.lines.forEach((line, i) => {
-                sceneryG.append("text")
-                    .attr("class", "ascii-cloud")
-                    .attr("fill", "#c8e6c3")
-                    .attr("opacity", "0.9")
-                    .attr("x", cloud.x)
-                    .attr("y", cloud.y + i * lineHeight)
-                    .attr("xml:space", "preserve")
-                    .text(line);
+                const textEl = createTextElement(cloud.x, cloud.y + i * lineHeight, line, 'ascii-cloud', '#c8e6c3', '0.9');
+                sceneryG.appendChild(textEl);
             });
         });
         
@@ -231,13 +261,8 @@ permalink: /
         ];
         
         birds.forEach(bird => {
-            sceneryG.append("text")
-                .attr("class", "ascii-bird")
-                .attr("fill", "#6b8e23")
-                .attr("opacity", "0.8")
-                .attr("x", bird.x)
-                .attr("y", bird.y)
-                .text(bird.text);
+            const textEl = createTextElement(bird.x, bird.y, bird.text, 'ascii-bird', '#6b8e23', '0.8');
+            sceneryG.appendChild(textEl);
         });
         
         const leftMountain = [
@@ -280,33 +305,23 @@ permalink: /
         
         const commonBaseY = queryPlanStartY + queryPlanHeight + (isMobile ? 80 : 250);
         
+        function renderMountain(mountain, x, baseY, charWidth, lineHeight) {
+            for (let i = 0; i < mountain.length; i++) {
+                const line = mountain[i];
+                const isBaseLine = (i === mountain.length - 1);
+                const y = isBaseLine ? baseY : (baseY - (mountain.length - 1 - i) * lineHeight);
+                const textEl = createTextElement(x, y, line, 'ascii-scenery', '#8fbc8f', '0.9');
+                sceneryG.appendChild(textEl);
+            }
+        }
+        
         const leftMountainWidth = 30 * charWidth;
-        const mountainX = queryPlanCenterX - queryPlanWidth / 2 - leftMountainWidth;
-        const mountainY = commonBaseY - (leftMountain.length - 1) * lineHeight;
-        leftMountain.forEach((line, i) => {
-            sceneryG.append("text")
-                .attr("class", "ascii-scenery")
-                .attr("fill", "#8fbc8f")
-                .attr("opacity", "0.9")
-                .attr("x", mountainX)
-                .attr("y", mountainY + i * lineHeight)
-                .attr("xml:space", "preserve")
-                .text(line);
-        });
+        const leftMountainX = queryPlanCenterX - queryPlanWidth / 2 - leftMountainWidth;
+        renderMountain(leftMountain, leftMountainX, commonBaseY, charWidth, lineHeight);
         
         const rightMountainWidth = 30 * charWidth;
-        const mountain2X = queryPlanCenterX + queryPlanWidth / 2 + 20;
-        const mountain2Y = commonBaseY - (rightMountain.length - 1) * lineHeight;
-        rightMountain.forEach((line, i) => {
-            sceneryG.append("text")
-                .attr("class", "ascii-scenery")
-                .attr("fill", "#8fbc8f")
-                .attr("opacity", "0.9")
-                .attr("x", mountain2X)
-                .attr("y", mountain2Y + i * lineHeight)
-                .attr("xml:space", "preserve")
-                .text(line);
-        });
+        const rightMountainX = queryPlanCenterX + queryPlanWidth / 2 + 20;
+        renderMountain(rightMountain, rightMountainX, commonBaseY, charWidth, lineHeight);
         
         const centerMountain = [
             "        /\\",
@@ -322,17 +337,7 @@ permalink: /
         
         const centerMountainWidth = 18 * charWidth;
         const centerMountainX = queryPlanCenterX - centerMountainWidth / 2;
-        const centerMountainY = commonBaseY - (centerMountain.length - 1) * lineHeight;
-        centerMountain.forEach((line, i) => {
-            sceneryG.append("text")
-                .attr("class", "ascii-scenery")
-                .attr("fill", "#8fbc8f")
-                .attr("opacity", "0.9")
-                .attr("x", centerMountainX)
-                .attr("y", centerMountainY + i * lineHeight)
-                .attr("xml:space", "preserve")
-                .text(line);
-        });
+        renderMountain(centerMountain, centerMountainX, commonBaseY, charWidth, lineHeight);
         
         const mediumMountain1 = [
             "      /\\",
@@ -346,17 +351,7 @@ permalink: /
         
         const mediumMountain1Width = 14 * charWidth;
         const mediumMountain1X = queryPlanCenterX - queryPlanWidth / 4 - mediumMountain1Width / 2;
-        const mediumMountain1Y = commonBaseY - (mediumMountain1.length - 1) * lineHeight;
-        mediumMountain1.forEach((line, i) => {
-            sceneryG.append("text")
-                .attr("class", "ascii-scenery")
-                .attr("fill", "#8fbc8f")
-                .attr("opacity", "0.9")
-                .attr("x", mediumMountain1X)
-                .attr("y", mediumMountain1Y + i * lineHeight)
-                .attr("xml:space", "preserve")
-                .text(line);
-        });
+        renderMountain(mediumMountain1, mediumMountain1X, commonBaseY, charWidth, lineHeight);
         
         const mediumMountain2 = [
             "      /\\",
@@ -370,17 +365,7 @@ permalink: /
         
         const mediumMountain2Width = 14 * charWidth;
         const mediumMountain2X = queryPlanCenterX + queryPlanWidth / 4 - mediumMountain2Width / 2;
-        const mediumMountain2Y = commonBaseY - (mediumMountain2.length - 1) * lineHeight;
-        mediumMountain2.forEach((line, i) => {
-            sceneryG.append("text")
-                .attr("class", "ascii-scenery")
-                .attr("fill", "#8fbc8f")
-                .attr("opacity", "0.9")
-                .attr("x", mediumMountain2X)
-                .attr("y", mediumMountain2Y + i * lineHeight)
-                .attr("xml:space", "preserve")
-                .text(line);
-        });
+        renderMountain(mediumMountain2, mediumMountain2X, commonBaseY, charWidth, lineHeight);
         
         const smallMountain1 = [
             "    /\\",
@@ -392,17 +377,7 @@ permalink: /
         
         const smallMountain1Width = 10 * charWidth;
         const smallMountain1X = queryPlanCenterX - queryPlanWidth / 6 - smallMountain1Width / 2;
-        const smallMountain1Y = commonBaseY - (smallMountain1.length - 1) * lineHeight;
-        smallMountain1.forEach((line, i) => {
-            sceneryG.append("text")
-                .attr("class", "ascii-scenery")
-                .attr("fill", "#8fbc8f")
-                .attr("opacity", "0.9")
-                .attr("x", smallMountain1X)
-                .attr("y", smallMountain1Y + i * lineHeight)
-                .attr("xml:space", "preserve")
-                .text(line);
-        });
+        renderMountain(smallMountain1, smallMountain1X, commonBaseY, charWidth, lineHeight);
         
         const smallMountain2 = [
             "    /\\",
@@ -414,17 +389,7 @@ permalink: /
         
         const smallMountain2Width = 10 * charWidth;
         const smallMountain2X = queryPlanCenterX + queryPlanWidth / 6 - smallMountain2Width / 2;
-        const smallMountain2Y = commonBaseY - (smallMountain2.length - 1) * lineHeight;
-        smallMountain2.forEach((line, i) => {
-            sceneryG.append("text")
-                .attr("class", "ascii-scenery")
-                .attr("fill", "#8fbc8f")
-                .attr("opacity", "0.9")
-                .attr("x", smallMountain2X)
-                .attr("y", smallMountain2Y + i * lineHeight)
-                .attr("xml:space", "preserve")
-                .text(line);
-        });
+        renderMountain(smallMountain2, smallMountain2X, commonBaseY, charWidth, lineHeight);
         
         const tinyMountain1 = [
             "  /\\",
@@ -434,17 +399,7 @@ permalink: /
         
         const tinyMountain1Width = 6 * charWidth;
         const tinyMountain1X = queryPlanCenterX - queryPlanWidth / 8 - tinyMountain1Width / 2;
-        const tinyMountain1Y = commonBaseY - (tinyMountain1.length - 1) * lineHeight;
-        tinyMountain1.forEach((line, i) => {
-            sceneryG.append("text")
-                .attr("class", "ascii-scenery")
-                .attr("fill", "#8fbc8f")
-                .attr("opacity", "0.9")
-                .attr("x", tinyMountain1X)
-                .attr("y", tinyMountain1Y + i * lineHeight)
-                .attr("xml:space", "preserve")
-                .text(line);
-        });
+        renderMountain(tinyMountain1, tinyMountain1X, commonBaseY, charWidth, lineHeight);
         
         const tinyMountain2 = [
             "  /\\",
@@ -454,17 +409,7 @@ permalink: /
         
         const tinyMountain2Width = 6 * charWidth;
         const tinyMountain2X = queryPlanCenterX + queryPlanWidth / 8 - tinyMountain2Width / 2;
-        const tinyMountain2Y = commonBaseY - (tinyMountain2.length - 1) * lineHeight;
-        tinyMountain2.forEach((line, i) => {
-            sceneryG.append("text")
-                .attr("class", "ascii-scenery")
-                .attr("fill", "#8fbc8f")
-                .attr("opacity", "0.9")
-                .attr("x", tinyMountain2X)
-                .attr("y", tinyMountain2Y + i * lineHeight)
-                .attr("xml:space", "preserve")
-                .text(line);
-        });
+        renderMountain(tinyMountain2, tinyMountain2X, commonBaseY, charWidth, lineHeight);
         
         const flowers = isMobile ? [
             { x: queryPlanStartX - 40, y: queryPlanStartY + queryPlanHeight + 20, text: "  @\n @@@\n  |" },
@@ -485,106 +430,72 @@ permalink: /
         flowers.forEach(flower => {
             const lines = flower.text.split('\n');
             lines.forEach((line, i) => {
-                sceneryG.append("text")
-                    .attr("class", "ascii-flower")
-                    .attr("fill", "#228b22")
-                    .attr("opacity", "0.85")
-                    .attr("x", flower.x)
-                    .attr("y", flower.y + i * lineHeight)
-                    .attr("xml:space", "preserve")
-                    .text(line);
+                const textEl = createTextElement(flower.x, flower.y + i * lineHeight, line, 'ascii-flower', '#228b22', '0.85');
+                sceneryG.appendChild(textEl);
             });
         });
-
-    const g = svg.append("g")
-            .attr("transform", `translate(${queryPlanStartX}, ${queryPlanStartY})`);
+        
+        const g = createSVGElement('g', {
+            'transform': `translate(${queryPlanStartX}, ${queryPlanStartY})`
+        });
+        svg.appendChild(g);
         
         asciiArtWithConnector.forEach((line, i) => {
-            
-            const baseText = g.append("text")
-                .attr("class", "ascii-text")
-                .attr("fill", "#2d5016")
-                .attr("x", 0)
-                .attr("y", (i + 1) * lineHeight)
-                .attr("xml:space", "preserve")
-                .text(line);
+            const baseText = createTextElement(0, (i + 1) * lineHeight, line, 'ascii-text', '#2d5016');
+            g.appendChild(baseText);
             
             if (line.includes('aliya bannayeva')) {
                 const startX = line.indexOf('aliya bannayeva') * charWidth;
-                g.append("text")
-                    .attr("class", "ascii-link")
-                    .attr("fill", "#228b22")
-                    .attr("font-weight", "bold")
-                    .attr("x", startX)
-                    .attr("y", (i + 1) * lineHeight)
-                    .text("aliya bannayeva")
-                    .style("cursor", "pointer")
-                    .on("click", () => window.location.href = "/about/");
+                const linkText = createTextElement(startX, (i + 1) * lineHeight, 'aliya bannayeva', 'ascii-link', '#228b22');
+                linkText.setAttribute('font-weight', 'bold');
+                linkText.style.cursor = 'pointer';
+                linkText.addEventListener('click', () => window.location.href = '/about/');
+                g.appendChild(linkText);
             }
             
             if (line.includes('cv') && line.includes('| cv')) {
                 const startX = line.indexOf('cv') * charWidth;
-                g.append("text")
-                    .attr("class", "ascii-link")
-                    .attr("fill", "#228b22")
-                    .attr("font-weight", "bold")
-                    .attr("x", startX)
-                    .attr("y", (i + 1) * lineHeight)
-                    .text("cv")
-                    .style("cursor", "pointer")
-                    .on("click", () => window.open("/files/cv.pdf", "_blank"));
+                const linkText = createTextElement(startX, (i + 1) * lineHeight, 'cv', 'ascii-link', '#228b22');
+                linkText.setAttribute('font-weight', 'bold');
+                linkText.style.cursor = 'pointer';
+                linkText.addEventListener('click', () => window.open('/files/cv.pdf', '_blank'));
+                g.appendChild(linkText);
             }
             
             if (line.includes('blog') && line.includes('| blog')) {
                 const startX = line.indexOf('blog') * charWidth;
-                g.append("text")
-                    .attr("class", "ascii-link")
-                    .attr("fill", "#228b22")
-                    .attr("font-weight", "bold")
-                    .attr("x", startX)
-                    .attr("y", (i + 1) * lineHeight)
-                    .text("blog")
-                    .style("cursor", "pointer")
-                    .on("click", () => window.location.href = "/blog/");
+                const linkText = createTextElement(startX, (i + 1) * lineHeight, 'blog', 'ascii-link', '#228b22');
+                linkText.setAttribute('font-weight', 'bold');
+                linkText.style.cursor = 'pointer';
+                linkText.addEventListener('click', () => window.location.href = '/blog/');
+                g.appendChild(linkText);
             }
             
             if (line.includes('github') && line.includes('| github')) {
                 const startX = line.indexOf('github') * charWidth;
-                g.append("text")
-                    .attr("class", "ascii-link")
-                    .attr("fill", "#228b22")
-                    .attr("font-weight", "bold")
-                    .attr("x", startX)
-                    .attr("y", (i + 1) * lineHeight)
-                    .text("github")
-                    .style("cursor", "pointer")
-                    .on("click", () => window.open("https://github.com/bannayeva", "_blank"));
+                const linkText = createTextElement(startX, (i + 1) * lineHeight, 'github', 'ascii-link', '#228b22');
+                linkText.setAttribute('font-weight', 'bold');
+                linkText.style.cursor = 'pointer';
+                linkText.addEventListener('click', () => window.open('https://github.com/bannayeva', '_blank'));
+                g.appendChild(linkText);
             }
             
             if (line.includes('scholar') && line.includes('| scholar')) {
                 const startX = line.indexOf('scholar') * charWidth;
-                g.append("text")
-                    .attr("class", "ascii-link")
-                    .attr("fill", "#228b22")
-                    .attr("font-weight", "bold")
-                    .attr("x", startX)
-                    .attr("y", (i + 1) * lineHeight)
-                    .text("scholar")
-                    .style("cursor", "pointer")
-                    .on("click", () => window.open("https://scholar.google.com/citations?user=qyOolasAAAAJ&hl=en", "_blank"));
+                const linkText = createTextElement(startX, (i + 1) * lineHeight, 'scholar', 'ascii-link', '#228b22');
+                linkText.setAttribute('font-weight', 'bold');
+                linkText.style.cursor = 'pointer';
+                linkText.addEventListener('click', () => window.open('https://scholar.google.com/citations?user=qyOolasAAAAJ&hl=en', '_blank'));
+                g.appendChild(linkText);
             }
             
             if (line.includes('email') && line.includes('| email')) {
                 const startX = line.indexOf('email') * charWidth;
-                g.append("text")
-                    .attr("class", "ascii-link")
-                    .attr("fill", "#228b22")
-                    .attr("font-weight", "bold")
-                    .attr("x", startX)
-                    .attr("y", (i + 1) * lineHeight)
-                    .text("email")
-        .style("cursor", "pointer")
-                    .on("click", () => window.location.href = "mailto:aliya.bannayeva@tum.de");
+                const linkText = createTextElement(startX, (i + 1) * lineHeight, 'email', 'ascii-link', '#228b22');
+                linkText.setAttribute('font-weight', 'bold');
+                linkText.style.cursor = 'pointer';
+                linkText.addEventListener('click', () => window.location.href = 'mailto:aliya.bannayeva@tum.de');
+                g.appendChild(linkText);
             }
         });
     }
@@ -603,14 +514,33 @@ permalink: /
     
     const debouncedRender = debounce(renderQueryPlan, 150);
     
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', renderQueryPlan);
-    } else {
-        renderQueryPlan();
+    function init() {
+        try {
+            function tryRender() {
+                const svg = document.getElementById('query-plan-svg');
+                if (svg) {
+                    renderQueryPlan();
+                } else {
+                    setTimeout(tryRender, 50);
+                }
+            }
+            
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', function() {
+                    setTimeout(tryRender, 100);
+                });
+            } else {
+                setTimeout(tryRender, 100);
+            }
+        } catch (error) {
+            console.error('Error initializing query plan:', error);
+        }
     }
     
-    window.addEventListener("resize", debouncedRender);
-    window.addEventListener("orientationchange", () => {
+    init();
+    
+    window.addEventListener('resize', debouncedRender);
+    window.addEventListener('orientationchange', () => {
         setTimeout(renderQueryPlan, 200);
     });
 })();
