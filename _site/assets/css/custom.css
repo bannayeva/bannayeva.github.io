@@ -28,4 +28,132 @@ body {
     border: 1px solid var(--global-border-color);
     border-radius: 4px;
     margin-bottom: 1rem;
+}
+
+.query-plan-container {
+    max-width: 100%;
+    margin: 40px auto;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    overflow: visible;
+}
+
+#query-plan-svg {
+    font-family: "Courier New", monospace;
+    font-size: 11px;
+    background: transparent;
+}
+
+.ascii-text {
+    fill: #2d5016;
+    font-family: "Courier New", monospace;
+    font-size: 11px;
+    white-space: pre;
+}
+
+.ascii-link {
+    fill: #228b22;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.ascii-link:hover {
+    fill: #006400;
+}
+
+.ascii-operator {
+    fill: #556b2f;
+}
+
+.ascii-scan {
+    fill: #228b22;
+}
+
+.ascii-card {
+    fill: #6b8e23;
+}
+
+.ascii-scenery {
+    fill: #8fbc8f;
+    opacity: 0.9;
+}
+
+.ascii-cloud {
+    fill: #c8e6c3;
+    opacity: 0.9;
+}
+
+.ascii-bird {
+    fill: #6b8e23;
+    opacity: 0.8;
+}
+
+.ascii-flower {
+    fill: #228b22;
+    opacity: 0.85;
+}
+
+.about-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    display: flex;
+    gap: 40px;
+    align-items: center;
+}
+
+.about-text {
+    flex: 1;
+    font-family: "Courier New", monospace;
+    color: #2d5016;
+    text-align: left;
+}
+
+.about-text h1 {
+    font-family: "Courier New", monospace;
+    color: #2d5016;
+    font-size: 2em;
+    margin-bottom: 20px;
+    text-transform: lowercase;
+}
+
+.about-text p {
+    font-family: "Courier New", monospace;
+    color: #2d5016;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+.about-text a {
+    color: #228b22;
+    text-decoration: none;
+}
+
+.about-text a:hover {
+    color: #006400;
+    text-decoration: underline;
+}
+
+.about-image {
+    flex-shrink: 0;
+}
+
+.about-image img {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+@media (max-width: 768px) {
+    .about-container {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .about-text {
+        text-align: center;
+    }
 } 
