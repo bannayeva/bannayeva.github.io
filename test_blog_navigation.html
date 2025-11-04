@@ -240,13 +240,27 @@
             ]
         };
 
-        const margin = {top: 40, right: 60, bottom: 40, left: 20};
-        const width = 450 - margin.left - margin.right;
-        const height = 550 - margin.top - margin.bottom;
+        // Get the actual SVG dimensions
+        let svgElement = document.getElementById("navigation-tree-svg");
+        if (!svgElement) {
+            // Fallback for when included in different contexts
+            svgElement = document.querySelector('svg[id*="navigation-tree"]');
+        }
+        if (!svgElement) {
+            console.error("Navigation tree SVG element not found");
+            return;
+        }
+
+        const rect = svgElement.getBoundingClientRect();
+        const width = Math.max(200, rect.width - 60); // Account for margins, minimum 200px
+        const height = Math.max(300, rect.height - 80); // Account for margins, minimum 300px
+
+        const margin = {top: 40, right: 30, bottom: 40, left: 30};
 
         const svg = d3.select("#navigation-tree-svg")
             .attr("width", width + margin.left + margin.right)
-            .attr("height", height + margin.top + margin.bottom);
+            .attr("height", height + margin.top + margin.bottom)
+            .attr("viewBox", `0 0 ${width + margin.left + margin.right} ${height + margin.top + margin.bottom}`);
 
         const g = svg.append("g")
             .attr("transform", `translate(${margin.left},${margin.top})`);

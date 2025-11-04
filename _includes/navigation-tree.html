@@ -94,7 +94,7 @@
             type: "join",
             children: [
                 {
-                    name: "Home",
+                    name: window.location.pathname === "/blog/" ? "Home (click to go back)" : "Home",
                     type: "leaf",
                     url: "/"
                 },
@@ -103,9 +103,9 @@
                     type: "join",
                     children: [
                         {
-                            name: "Blog",
+                            name: window.location.pathname === "/blog/" ? "Home" : "Blog",
                             type: "leaf",
-                            url: "/blog/"
+                            url: window.location.pathname === "/blog/" ? "/" : "/blog/"
                         },
                         {
                             name: "⋈",
@@ -154,10 +154,19 @@
         };
 
         // Get the actual SVG dimensions
-        const svgElement = d3.select("#navigation-tree-svg").node();
+        let svgElement = document.getElementById("navigation-tree-svg");
+        if (!svgElement) {
+            // Fallback for when included in different contexts
+            svgElement = document.querySelector('svg[id*="navigation-tree"]');
+        }
+        if (!svgElement) {
+            console.error("Navigation tree SVG element not found");
+            return;
+        }
+
         const rect = svgElement.getBoundingClientRect();
-        const width = rect.width - 60; // Account for margins
-        const height = rect.height - 80; // Account for margins
+        const width = Math.max(200, rect.width - 60); // Account for margins, minimum 200px
+        const height = Math.max(300, rect.height - 80); // Account for margins, minimum 300px
 
         const margin = {top: 40, right: 30, bottom: 40, left: 30};
 

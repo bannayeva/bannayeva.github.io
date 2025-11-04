@@ -3,13 +3,9 @@
 <!doctype html>
 <html lang="en" class="no-js">
   <head>
-
+    
 
 <meta charset="utf-8">
-
-
-
-<title>Blog - Aliya Bannayeva</title>
 
 
 
@@ -23,7 +19,7 @@
 
 
 
-<title>Aliya Bannayeva</title>
+<title>Blog - Aliya Bannayeva</title>
 
 
 
@@ -69,7 +65,7 @@
 <!-- Open Graph protocol data (https://ogp.me/), used by social media -->
 <meta property="og:locale" content="en-US">
 <meta property="og:site_name" content="Aliya Bannayeva"> 
-<meta property="og:title" content="Aliya Bannayeva">
+<meta property="og:title" content="Blog">
 
 
 
@@ -130,92 +126,6 @@
 
 <!-- end custom head snippets -->
 
-<style>
-    .sidebar {
-        background: transparent !important;
-        box-shadow: none !important;
-        border: none !important;
-    }
-
-    #navigation-tree-svg {
-        background: transparent;
-        width: 100%;
-        height: 550px;
-        display: block;
-        margin: 0 auto;
-        max-width: 100%;
-        overflow: visible;
-    }
-
-    /* Mobile responsiveness */
-    @media (max-width: 768px) {
-        #navigation-tree-svg {
-            height: 400px;
-        }
-    }
-
-    @media (max-width: 480px) {
-        #navigation-tree-svg {
-            height: 350px;
-        }
-    }
-
-    .nav-link {
-        fill: none;
-        stroke: #764ba2;
-        stroke-width: 2px;
-        transition: all 0.3s ease;
-    }
-
-    .nav-link.highlighted {
-        stroke: #333;
-        stroke-width: 3px;
-    }
-
-    .nav-node {
-        cursor: pointer;
-    }
-
-    .nav-join-node {
-        font-size: 22px;
-        font-weight: bold;
-        fill: #764ba2;
-        font-family: "Courier New", monospace;
-    }
-
-    .nav-leaf-node text {
-        font-size: 14px;
-        font-weight: 600;
-        fill: #333;
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    }
-
-    /* Mobile responsive font sizes */
-    @media (max-width: 768px) {
-        .nav-join-node {
-            font-size: 18px;
-        }
-
-        .nav-leaf-node text {
-            font-size: 12px;
-        }
-    }
-
-    @media (max-width: 480px) {
-        .nav-join-node {
-            font-size: 16px;
-        }
-
-        .nav-leaf-node text {
-            font-size: 11px;
-        }
-    }
-
-    .nav-leaf-node:hover text {
-        fill: #764ba2;
-    }
-</style>
-
   </head>
 
   <body>
@@ -240,66 +150,53 @@
 
 
 
-
-
 <div id="main" role="main">
+  
 
-<div class="sidebar sticky">
-  <svg id="navigation-tree-svg" style="background: transparent; width: 100%; height: 550px; display: block; margin: 0 auto; max-width: 100%; overflow: visible;"></svg>
+
+
+  <div class="archive">
+    
+      <h1 class="page__title">Blog</h1>
+    
+    
+<div class="list__item">
+  <article class="archive__item" itemscope="" itemtype="http://schema.org/CreativeWork">
+    
+
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/posts/2012/08/blog-post-1/" rel="permalink">Blog Post number 1
+</a>
+      
+    </h2>
+    
+    
+      <p class="page__meta"><i class="fa fa-clock" aria-hidden="true"></i> 
+
+
+  
+	  less than 1 minute read
+	
+</p>
+    
+
+        
+         <p class="page__date"><strong><i class="fa fa-fw fa-calendar" aria-hidden="true"></i> Published:</strong> <time datetime="2012-08-14T00:00:00+00:00">August 14, 2012</time></p>
+        
+
+    
+    <p class="archive__item-excerpt" itemprop="description"><p>This is a sample blog post about various topics.</p>
+</p>
+    
+    
+    
+
+  </article>
 </div>
 
-  <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
-    
-    
-    
-    
 
-    <div class="page__inner-wrap">
-      
-        <header>
-          
-          
-        
-        
-            
-        </header>
-      
-
-      <section class="page__content" itemprop="text">
-        <hr />
-<p>layout: archive
-title: “Blog”
-permalink: /blog/
-redirect_from: /blog/
-author_profile: false</p>
-
-
-        
-
-        
-      </section>
-
-      <footer class="page__meta">
-        
-        
-
-
-
-
-      </footer>
-
-      
-
-      
-
-
-    </div>
-
-    
-  </article>
-
-  
-  
+  </div>
 </div>
 
 
@@ -330,7 +227,7 @@ author_profile: false</p>
 
 <div class="page__footer-copyright">
   &copy; 2025 Aliya Bannayeva, Powered by <a href="http://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://github.com/academicpages/academicpages.github.io">AcademicPages</a>, a fork of <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.<br />
-  Site last updated 2025-10-17
+  Site last updated 2025-11-04
 </div>
 
       </footer>
@@ -347,228 +244,6 @@ author_profile: false</p>
 
 
 
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
-<script>
-    function createNavigationTree() {
-        const treeData = {
-            name: "⋈",
-            type: "join",
-            children: [
-                {
-                    name: window.location.pathname === "/blog/" ? "Home" : "Blog",
-                    type: "leaf",
-                    url: window.location.pathname === "/blog/" ? "/" : "/blog/"
-                },
-                        {
-                            name: "CV",
-                            type: "leaf",
-                            url: "/files/cv.pdf",
-                            target: "_blank"
-                        },
-                        {
-                            name: "⋈",
-                            type: "join",
-                            children: [
-                                {
-                                    name: "GitHub",
-                                    type: "leaf",
-                                    url: "https://github.com/bannayeva",
-                                    target: "_blank"
-                                },
-                                {
-                                    name: "⋈",
-                                    type: "join",
-                                    children: [
-                                        {
-                                            name: "Scholar",
-                                            type: "leaf",
-                                            url: "https://scholar.google.com/citations?user=qyOolasAAAAJ&hl=en",
-                                            target: "_blank"
-                                        },
-                                        {
-                                            name: "Email",
-                                            type: "leaf",
-                                            url: "mailto:aliya.bannaeva@gmail.com"
-                                        }
-                                        ]
-                                    }
-                                ]
-                            }
-                        }
-                    ]
-                }
-            ]
-        };
-
-        // Get the actual SVG dimensions
-        let svgElement = document.getElementById("navigation-tree-svg");
-        if (!svgElement) {
-            // Fallback for when included in different contexts
-            svgElement = document.querySelector('svg[id*="navigation-tree"]');
-        }
-        if (!svgElement) {
-            console.error("Navigation tree SVG element not found");
-            return;
-        }
-
-        const rect = svgElement.getBoundingClientRect();
-        const width = Math.max(200, rect.width - 60); // Account for margins, minimum 200px
-        const height = Math.max(300, rect.height - 80); // Account for margins, minimum 300px
-
-        const margin = {top: 40, right: 30, bottom: 40, left: 30};
-
-        const svg = d3.select("#navigation-tree-svg")
-            .attr("width", width + margin.left + margin.right)
-            .attr("height", height + margin.top + margin.bottom)
-            .attr("viewBox", `0 0 ${width + margin.left + margin.right} ${height + margin.top + margin.bottom}`);
-
-        const g = svg.append("g")
-            .attr("transform", `translate(${margin.left},${margin.top})`);
-
-        const treemap = d3.tree()
-            .size([width, height * 0.8])
-            .separation(() => 1);
-
-        const root = d3.hierarchy(treeData);
-        const treeNodes = treemap(root);
-
-        const nodes = treeNodes.descendants();
-        const edgeLength = 40;
-        const horizontalSpacing = 50;
-
-        // Position nodes responsively
-        nodes.forEach(node => {
-            if (node.depth === 0) {
-                node.x = width / 2;
-                node.y = 20;
-            } else if (node.depth === 1) {
-                if (node.parent.children.indexOf(node) === 0) {
-                    node.x = node.parent.x - horizontalSpacing;
-                } else {
-                    node.x = node.parent.x + horizontalSpacing;
-                }
-                node.y = node.parent.y + edgeLength;
-            } else {
-                if (node.parent.children && node.parent.children.length === 2) {
-                    const index = node.parent.children.indexOf(node);
-                    const offset = horizontalSpacing / Math.pow(1.3, node.depth - 1);
-                    node.x = node.parent.x + (index === 0 ? -offset : offset);
-                } else {
-                    node.x = node.parent.x;
-                }
-                node.y = node.parent.y + edgeLength;
-            }
-
-            // Ensure nodes stay within bounds
-            node.x = Math.max(margin.left + 10, Math.min(width - margin.right - 10, node.x));
-            node.y = Math.max(margin.top + 10, Math.min(height - margin.bottom - 10, node.y));
-        });
-
-        const lastLevelNodes = nodes.filter(n => !n.children);
-        const scholarNode = lastLevelNodes.find(n => n.data.name === "Scholar");
-        const emailNode = lastLevelNodes.find(n => n.data.name === "Email");
-        if (scholarNode && emailNode) {
-            const parentX = scholarNode.parent.x;
-            // Use the same horizontal spacing as other levels for consistency
-            const baseSpacing = 35; // Match the horizontal spacing used in level positioning
-            scholarNode.x = Math.max(margin.left + 10, parentX - baseSpacing);
-            emailNode.x = Math.min(width - margin.right - 10, parentX + baseSpacing);
-
-            // Ensure they stay within bounds
-            scholarNode.x = Math.max(margin.left + 10, Math.min(width - margin.right - 10, scholarNode.x));
-            emailNode.x = Math.max(margin.left + 10, Math.min(width - margin.right - 10, emailNode.x));
-        }
-
-        const links = treeNodes.links();
-
-        const link = g.selectAll(".nav-link")
-            .data(links)
-            .enter().append("line")
-            .attr("class", "nav-link")
-            .attr("x1", d => d.source.x)
-            .attr("y1", d => d.source.y + 10)
-            .attr("x2", d => d.target.x)
-            .attr("y2", d => d.target.y - 10);
-
-        const node = g.selectAll(".nav-node")
-            .data(nodes)
-            .enter().append("g")
-            .attr("class", d => d.data.type === "join" ? "nav-node nav-join-node" : "nav-node nav-leaf-node")
-            .attr("transform", d => `translate(${d.x},${d.y})`);
-
-        node.filter(d => d.data.type === "join")
-            .append("text")
-            .attr("text-anchor", "middle")
-            .attr("dy", "0.35em")
-            .text(d => d.data.name);
-
-        const leafNodes = node.filter(d => d.data.type === "leaf");
-
-        leafNodes.append("text")
-            .attr("text-anchor", "middle")
-            .attr("dy", d => d.children ? "-0.5em" : "0.35em")
-            .text(d => d.data.name);
-
-        leafNodes
-            .style("cursor", "pointer")
-            .on("click", (event, d) => {
-                if (d.data.url) {
-                    if (d.data.target === "_blank") {
-                        window.open(d.data.url, "_blank");
-                    } else {
-                        window.location.href = d.data.url;
-                    }
-                }
-            });
-
-        leafNodes.on("mouseover", function(event, d) {
-            const pathToRoot = [];
-            let current = d;
-            while (current.parent) {
-                pathToRoot.push(current);
-                current = current.parent;
-            }
-
-            link.classed("highlighted", l => {
-                return pathToRoot.some(node =>
-                    l.target === node ||
-                    (l.source === node.parent && l.target === node)
-                );
-            });
-        })
-        .on("mouseout", function() {
-            link.classed("highlighted", false);
-        });
-
-        link.style("opacity", 0)
-            .transition()
-            .duration(500)
-            .delay((d, i) => i * 30)
-            .style("opacity", 1);
-
-        node.style("opacity", 0)
-            .transition()
-            .duration(500)
-            .delay((d, i) => i * 20)
-            .style("opacity", 1);
-    }
-
-    document.addEventListener('DOMContentLoaded', function() {
-        createNavigationTree();
-
-        // Add resize listener for responsive behavior
-        let resizeTimeout;
-        window.addEventListener('resize', function() {
-            // Clear existing tree
-            d3.select("#navigation-tree-svg").selectAll("*").remove();
-
-            // Debounce resize events
-            clearTimeout(resizeTimeout);
-            resizeTimeout = setTimeout(createNavigationTree, 150);
-        });
-    });
-</script>
 
   </body>
 </html>
