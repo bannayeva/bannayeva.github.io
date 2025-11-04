@@ -316,7 +316,7 @@
         const svgWidth = Math.max(queryPlanWidth + padding * 2, window.innerWidth - 20);
         const svgHeight = queryPlanHeight + padding * 3 + (isMobile ? 200 : 400);
         
-        const queryPlanStartX = padding;
+        const queryPlanStartX = (svgWidth - queryPlanWidth) / 2;
         const queryPlanStartY = padding;
         
         svg.attr("width", svgWidth)
@@ -420,11 +420,11 @@
         ];
         
         const queryPlanCenterX = queryPlanStartX + queryPlanWidth / 2;
-        const shiftRight = isMobile ? 0 : (queryPlanCenterX - svgWidth / 2 + 100);
         
         const commonBaseY = queryPlanStartY + queryPlanHeight + (isMobile ? 80 : 250);
         
-        const mountainX = isMobile ? Math.max(5, 5 + shiftRight) : Math.max(10, 10 + shiftRight);
+        const leftMountainWidth = 30 * charWidth;
+        const mountainX = queryPlanCenterX - queryPlanWidth / 2 - leftMountainWidth;
         const mountainY = commonBaseY - (leftMountain.length - 1) * lineHeight;
         leftMountain.forEach((line, i) => {
             sceneryG.append("text")
@@ -437,7 +437,8 @@
                 .text(line);
         });
         
-        const mountain2X = isMobile ? Math.min(svgWidth - 150, svgWidth - 150 + shiftRight) : Math.min(svgWidth - 350, svgWidth - 350 + shiftRight);
+        const rightMountainWidth = 30 * charWidth;
+        const mountain2X = queryPlanCenterX + queryPlanWidth / 2 + 20;
         const mountain2Y = commonBaseY - (rightMountain.length - 1) * lineHeight;
         rightMountain.forEach((line, i) => {
             sceneryG.append("text")
@@ -462,7 +463,8 @@
             "/________________\\"
         ];
         
-        const centerMountainX = isMobile ? queryPlanCenterX - 60 : queryPlanCenterX - 120;
+        const centerMountainWidth = 18 * charWidth;
+        const centerMountainX = queryPlanCenterX - centerMountainWidth / 2;
         const centerMountainY = commonBaseY - (centerMountain.length - 1) * lineHeight;
         centerMountain.forEach((line, i) => {
             sceneryG.append("text")
@@ -485,7 +487,8 @@
             "/____________\\"
         ];
         
-        const mediumMountain1X = isMobile ? queryPlanCenterX - queryPlanWidth / 4 - 35 : queryPlanCenterX - queryPlanWidth / 4 - 70;
+        const mediumMountain1Width = 14 * charWidth;
+        const mediumMountain1X = queryPlanCenterX - queryPlanWidth / 4 - mediumMountain1Width / 2;
         const mediumMountain1Y = commonBaseY - (mediumMountain1.length - 1) * lineHeight;
         mediumMountain1.forEach((line, i) => {
             sceneryG.append("text")
@@ -508,7 +511,8 @@
             "/____________\\"
         ];
         
-        const mediumMountain2X = isMobile ? queryPlanCenterX + queryPlanWidth / 4 - 35 : queryPlanCenterX + queryPlanWidth / 4 - 70;
+        const mediumMountain2Width = 14 * charWidth;
+        const mediumMountain2X = queryPlanCenterX + queryPlanWidth / 4 - mediumMountain2Width / 2;
         const mediumMountain2Y = commonBaseY - (mediumMountain2.length - 1) * lineHeight;
         mediumMountain2.forEach((line, i) => {
             sceneryG.append("text")
@@ -529,7 +533,8 @@
             "/________\\"
         ];
         
-        const smallMountain1X = isMobile ? queryPlanCenterX - queryPlanWidth / 6 - 25 : queryPlanCenterX - queryPlanWidth / 6 - 50;
+        const smallMountain1Width = 10 * charWidth;
+        const smallMountain1X = queryPlanCenterX - queryPlanWidth / 6 - smallMountain1Width / 2;
         const smallMountain1Y = commonBaseY - (smallMountain1.length - 1) * lineHeight;
         smallMountain1.forEach((line, i) => {
             sceneryG.append("text")
@@ -550,7 +555,8 @@
             "/________\\"
         ];
         
-        const smallMountain2X = isMobile ? queryPlanCenterX + queryPlanWidth / 6 - 25 : queryPlanCenterX + queryPlanWidth / 6 - 50;
+        const smallMountain2Width = 10 * charWidth;
+        const smallMountain2X = queryPlanCenterX + queryPlanWidth / 6 - smallMountain2Width / 2;
         const smallMountain2Y = commonBaseY - (smallMountain2.length - 1) * lineHeight;
         smallMountain2.forEach((line, i) => {
             sceneryG.append("text")
@@ -569,7 +575,8 @@
             "/____\\"
         ];
         
-        const tinyMountain1X = isMobile ? queryPlanCenterX - queryPlanWidth / 8 - 15 : queryPlanCenterX - queryPlanWidth / 8 - 30;
+        const tinyMountain1Width = 6 * charWidth;
+        const tinyMountain1X = queryPlanCenterX - queryPlanWidth / 8 - tinyMountain1Width / 2;
         const tinyMountain1Y = commonBaseY - (tinyMountain1.length - 1) * lineHeight;
         tinyMountain1.forEach((line, i) => {
             sceneryG.append("text")
@@ -588,7 +595,8 @@
             "/____\\"
         ];
         
-        const tinyMountain2X = isMobile ? queryPlanCenterX + queryPlanWidth / 8 - 15 : queryPlanCenterX + queryPlanWidth / 8 - 30;
+        const tinyMountain2Width = 6 * charWidth;
+        const tinyMountain2X = queryPlanCenterX + queryPlanWidth / 8 - tinyMountain2Width / 2;
         const tinyMountain2Y = commonBaseY - (tinyMountain2.length - 1) * lineHeight;
         tinyMountain2.forEach((line, i) => {
             sceneryG.append("text")
