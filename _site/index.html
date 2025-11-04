@@ -152,11 +152,12 @@
 
 <style>
     .query-plan-container {
-        max-width: 1200px;
+        max-width: 100%;
         margin: 40px auto;
         padding: 20px;
         display: flex;
         justify-content: center;
+        overflow: visible;
     }
 
     #query-plan-svg {
@@ -192,6 +193,26 @@
 
     .ascii-card {
         fill: #6b8e23;
+    }
+
+    .ascii-scenery {
+        fill: #8fbc8f;
+        opacity: 0.9;
+    }
+
+    .ascii-cloud {
+        fill: #c8e6c3;
+        opacity: 0.9;
+    }
+
+    .ascii-bird {
+        fill: #6b8e23;
+        opacity: 0.8;
+    }
+
+    .ascii-flower {
+        fill: #228b22;
+        opacity: 0.85;
     }
 </style>
 
@@ -272,16 +293,291 @@
         ];
         
         const maxLineLength = d3.max(asciiArtWithConnector.map(l => l.length));
-        const svgWidth = maxLineLength * charWidth + 40;
-        const svgHeight = asciiArtWithConnector.length * lineHeight + 40;
+        const queryPlanWidth = maxLineLength * charWidth;
+        const queryPlanHeight = asciiArtWithConnector.length * lineHeight;
+        
+        const padding = 200;
+        const svgWidth = queryPlanWidth + padding * 2;
+        const svgHeight = queryPlanHeight + padding * 3;
+        
+        const queryPlanStartX = padding;
+        const queryPlanStartY = padding;
         
         svg.attr("width", svgWidth)
            .attr("height", svgHeight);
         
         svg.selectAll("*").remove();
 
+        const sceneryG = svg.append("g").attr("class", "scenery");
+        
+        const bigCloud = [
+            "           __",
+            "        __(  )__",
+            "      (          )",
+            "     (            )",
+            "    (              )"
+        ];
+        
+        const clouds = [
+            { x: 50, y: 50, lines: bigCloud },
+            { x: svgWidth - 300, y: 40, lines: bigCloud },
+            { x: svgWidth / 2 - 80, y: 30, lines: [
+                "     __",
+                "  __(  )__",
+                " (        )"
+            ]}
+        ];
+        
+        clouds.forEach(cloud => {
+            cloud.lines.forEach((line, i) => {
+                sceneryG.append("text")
+                    .attr("class", "ascii-cloud")
+                    .attr("x", cloud.x)
+                    .attr("y", cloud.y + i * lineHeight)
+                    .attr("xml:space", "preserve")
+                    .text(line);
+            });
+        });
+        
+        const birds = [
+            { x: 80, y: 100, text: ">^>^>^" },
+            { x: svgWidth - 200, y: 110, text: ">^>^>^" },
+            { x: 120, y: queryPlanStartY + queryPlanHeight + 60, text: ">^>^" },
+            { x: svgWidth - 180, y: queryPlanStartY + queryPlanHeight + 70, text: ">^>^" },
+            { x: svgWidth / 2 - 100, y: 90, text: ">^>^" }
+        ];
+        
+        birds.forEach(bird => {
+            sceneryG.append("text")
+                .attr("class", "ascii-bird")
+                .attr("x", bird.x)
+                .attr("y", bird.y)
+                .text(bird.text);
+        });
+        
+        const leftMountain = [
+            "              /\\",
+            "             /  \\",
+            "            /    \\",
+            "           /      \\",
+            "          /        \\",
+            "         /          \\",
+            "        /            \\",
+            "       /              \\",
+            "      /                \\",
+            "     /                  \\",
+            "    /                    \\",
+            "   /                      \\",
+            "  /                        \\",
+            " /                          \\",
+            "/____________________________\\"
+        ];
+        
+        const rightMountain = [
+            "              /\\",
+            "             /  \\",
+            "            /    \\",
+            "           /      \\",
+            "          /        \\",
+            "         /          \\",
+            "        /            \\",
+            "       /              \\",
+            "      /                \\",
+            "     /                  \\",
+            "    /                    \\",
+            "   /                      \\",
+            "  /                        \\",
+            " /                          \\",
+            "/____________________________\\"
+        ];
+        
+        const queryPlanCenterX = queryPlanStartX + queryPlanWidth / 2;
+        const shiftRight = queryPlanCenterX - svgWidth / 2 + 100;
+        
+        const mountainX = 10 + shiftRight;
+        const mountainY = svgHeight - leftMountain.length * lineHeight - 10;
+        leftMountain.forEach((line, i) => {
+            sceneryG.append("text")
+                .attr("class", "ascii-scenery")
+                .attr("x", mountainX)
+                .attr("y", mountainY + i * lineHeight)
+                .attr("xml:space", "preserve")
+                .text(line);
+        });
+        
+        const mountain2X = svgWidth - 350 + shiftRight;
+        const mountain2Y = svgHeight - rightMountain.length * lineHeight - 10;
+        rightMountain.forEach((line, i) => {
+            sceneryG.append("text")
+                .attr("class", "ascii-scenery")
+                .attr("x", mountain2X)
+                .attr("y", mountain2Y + i * lineHeight)
+                .attr("xml:space", "preserve")
+                .text(line);
+        });
+        
+        const centerMountain = [
+            "        /\\",
+            "       /  \\",
+            "      /    \\",
+            "     /      \\",
+            "    /        \\",
+            "   /          \\",
+            "  /            \\",
+            " /              \\",
+            "/________________\\"
+        ];
+        
+        const centerMountainX = svgWidth / 2 - 120 + shiftRight;
+        const centerMountainY = svgHeight - centerMountain.length * lineHeight - 10;
+        centerMountain.forEach((line, i) => {
+            sceneryG.append("text")
+                .attr("class", "ascii-scenery")
+                .attr("x", centerMountainX)
+                .attr("y", centerMountainY + i * lineHeight)
+                .attr("xml:space", "preserve")
+                .text(line);
+        });
+        
+        const mediumMountain1 = [
+            "      /\\",
+            "     /  \\",
+            "    /    \\",
+            "   /      \\",
+            "  /        \\",
+            " /          \\",
+            "/____________\\"
+        ];
+        
+        const mediumMountain1X = 180 + shiftRight;
+        const mediumMountain1Y = svgHeight - mediumMountain1.length * lineHeight - 10;
+        mediumMountain1.forEach((line, i) => {
+            sceneryG.append("text")
+                .attr("class", "ascii-scenery")
+                .attr("x", mediumMountain1X)
+                .attr("y", mediumMountain1Y + i * lineHeight)
+                .attr("xml:space", "preserve")
+                .text(line);
+        });
+        
+        const mediumMountain2 = [
+            "      /\\",
+            "     /  \\",
+            "    /    \\",
+            "   /      \\",
+            "  /        \\",
+            " /          \\",
+            "/____________\\"
+        ];
+        
+        const mediumMountain2X = svgWidth - 250 + shiftRight;
+        const mediumMountain2Y = svgHeight - mediumMountain2.length * lineHeight - 10;
+        mediumMountain2.forEach((line, i) => {
+            sceneryG.append("text")
+                .attr("class", "ascii-scenery")
+                .attr("x", mediumMountain2X)
+                .attr("y", mediumMountain2Y + i * lineHeight)
+                .attr("xml:space", "preserve")
+                .text(line);
+        });
+        
+        const smallMountain1 = [
+            "    /\\",
+            "   /  \\",
+            "  /    \\",
+            " /      \\",
+            "/________\\"
+        ];
+        
+        const smallMountain1X = 350 + shiftRight;
+        const smallMountain1Y = svgHeight - smallMountain1.length * lineHeight - 10;
+        smallMountain1.forEach((line, i) => {
+            sceneryG.append("text")
+                .attr("class", "ascii-scenery")
+                .attr("x", smallMountain1X)
+                .attr("y", smallMountain1Y + i * lineHeight)
+                .attr("xml:space", "preserve")
+                .text(line);
+        });
+        
+        const smallMountain2 = [
+            "    /\\",
+            "   /  \\",
+            "  /    \\",
+            " /      \\",
+            "/________\\"
+        ];
+        
+        const smallMountain2X = svgWidth - 400 + shiftRight;
+        const smallMountain2Y = svgHeight - smallMountain2.length * lineHeight - 10;
+        smallMountain2.forEach((line, i) => {
+            sceneryG.append("text")
+                .attr("class", "ascii-scenery")
+                .attr("x", smallMountain2X)
+                .attr("y", smallMountain2Y + i * lineHeight)
+                .attr("xml:space", "preserve")
+                .text(line);
+        });
+        
+        const tinyMountain1 = [
+            "  /\\",
+            " /  \\",
+            "/____\\"
+        ];
+        
+        const tinyMountain1X = 450 + shiftRight;
+        const tinyMountain1Y = svgHeight - tinyMountain1.length * lineHeight - 10;
+        tinyMountain1.forEach((line, i) => {
+            sceneryG.append("text")
+                .attr("class", "ascii-scenery")
+                .attr("x", tinyMountain1X)
+                .attr("y", tinyMountain1Y + i * lineHeight)
+                .attr("xml:space", "preserve")
+                .text(line);
+        });
+        
+        const tinyMountain2 = [
+            "  /\\",
+            " /  \\",
+            "/____\\"
+        ];
+        
+        const tinyMountain2X = svgWidth - 500 + shiftRight;
+        const tinyMountain2Y = svgHeight - tinyMountain2.length * lineHeight - 10;
+        tinyMountain2.forEach((line, i) => {
+            sceneryG.append("text")
+                .attr("class", "ascii-scenery")
+                .attr("x", tinyMountain2X)
+                .attr("y", tinyMountain2Y + i * lineHeight)
+                .attr("xml:space", "preserve")
+                .text(line);
+        });
+        
+        const flowers = [
+            { x: queryPlanStartX - 80, y: queryPlanStartY + queryPlanHeight + 40, text: "  @\n @@@\n  |" },
+            { x: queryPlanStartX - 60, y: queryPlanStartY + queryPlanHeight + 60, text: "  @\n @@@\n  |" },
+            { x: queryPlanStartX + queryPlanWidth + 40, y: queryPlanStartY + queryPlanHeight + 50, text: "  @\n @@@\n  |" },
+            { x: queryPlanStartX + queryPlanWidth + 60, y: queryPlanStartY + queryPlanHeight + 70, text: "  @\n @@@\n  |" },
+            { x: queryPlanStartX - 50, y: queryPlanStartY + 100, text: "  @\n @@@\n  |" },
+            { x: queryPlanStartX + queryPlanWidth + 30, y: queryPlanStartY + 120, text: "  @\n @@@\n  |" },
+            { x: queryPlanStartX + queryPlanWidth / 2 - 20, y: queryPlanStartY + queryPlanHeight + 80, text: "  @\n @@@\n  |" },
+            { x: queryPlanStartX + queryPlanWidth / 2 + 20, y: queryPlanStartY + queryPlanHeight + 60, text: "  @\n @@@\n  |" }
+        ];
+        
+        flowers.forEach(flower => {
+            const lines = flower.text.split('\n');
+            lines.forEach((line, i) => {
+                sceneryG.append("text")
+                    .attr("class", "ascii-flower")
+                    .attr("x", flower.x)
+                    .attr("y", flower.y + i * lineHeight)
+                    .attr("xml:space", "preserve")
+                    .text(line);
+            });
+        });
+
     const g = svg.append("g")
-            .attr("transform", "translate(20, 20)");
+            .attr("transform", `translate(${queryPlanStartX}, ${queryPlanStartY})`);
         
         asciiArtWithConnector.forEach((line, i) => {
             
