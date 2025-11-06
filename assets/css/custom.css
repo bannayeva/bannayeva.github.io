@@ -157,3 +157,17 @@ body {
         text-align: center;
     }
 } 
+
+/* Blog and page content: force Courier New */
+.page__content,
+.post__content,
+.archive__item,
+.archive__item-title,
+.archive__item-excerpt,
+.post,
+.page,
+body {
+  font-family: "Courier New", monospace !important;
+  color: #2d5016;
+  letter-spacing: 0;
+} 
