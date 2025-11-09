@@ -1,0 +1,20 @@
+{
+	"folders": [
+		{
+			"path": "../.."
+		},
+		{
+			"path": "../../../../Projects/duckdb"
+		},
+		{
+			"path": "../../../../../../Volumes/Hello/Projects/ClickHouse"
+		},
+		{
+			"path": "../../../../Documents/thesis/Code"
+		},
+		{
+			"path": "../../../../Projects/testo"
+		}
+	],
+	"settings": {}
+}
