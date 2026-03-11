@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Blog – Aliya Bannayeva</title>
+  <style>
+    :root {
+      --bg: #2e3347;
+      --text: #ddd9d0;
+      --muted: #8a8fa8;
+      --accent: #c85c3a;
+      --border: rgba(221,217,208,0.15);
+      --icon-bg: rgba(221,217,208,0.1);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    .deco {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      width: 100%; height: 100%;
+    }
+
+    header {
+      position: relative;
+      z-index: 10;
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 2rem 2rem 0;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    nav {
+      display: flex;
+      gap: 2.5rem;
+      font-size: 0.72rem;
+      font-weight: 400;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    nav a { color: var(--muted); text-decoration: none; transition: color 0.2s; }
+    nav a.active { color: var(--text); }
+    nav a.active::after {
+      content: '';
+      display: block;
+      height: 1px;
+      background: var(--accent);
+      margin-top: 3px;
+    }
+    nav a:hover { color: var(--text); }
+
+    main {
+      position: relative;
+      z-index: 10;
+      max-width: 780px;
+      margin: 5rem auto 6rem;
+      padding: 0 2rem;
+    }
+
+    h1 {
+      font-size: 3.2rem;
+      font-weight: 200;
+      line-height: 1;
+      letter-spacing: -0.01em;
+      color: var(--text);
+      text-transform: lowercase;
+      margin-bottom: 0.5rem;
+    }
+
+    h1 strong { font-weight: 700; }
+
+    .subtitle {
+      font-size: 0.7rem;
+      color: var(--muted);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      margin-bottom: 2.5rem;
+    }
+
+    .post-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .post-list li {
+      padding: 1.4rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .post-list li:first-child {
+      border-top: 1px solid var(--border);
+    }
+
+    .post-title {
+      font-size: 1.08rem;
+      font-weight: 400;
+      color: var(--text);
+      margin-bottom: 0.3rem;
+      opacity: 0.92;
+    }
+
+    .post-title a {
+      color: var(--text);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .post-title a:hover { color: var(--accent); }
+
+    .post-meta {
+      font-size: 0.72rem;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+
+    .post-excerpt {
+      font-size: 0.95rem;
+      line-height: 1.72;
+      color: var(--text);
+      font-weight: 300;
+      opacity: 0.78;
+    }
+
+    /* coming soon state */
+    .post-list li.empty .post-title {
+      opacity: 0.4;
+      font-style: italic;
+    }
+
+    .post-list li.empty .post-excerpt {
+      opacity: 0.45;
+    }
+  </style>
+</head>
+<body>
+
+  <svg class="deco" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+    <line x1="-100" y1="820" x2="1100" y2="-40" stroke="rgba(221,217,208,0.09)" stroke-width="3"/>
+    <line x1="-100" y1="920" x2="1300" y2="100" stroke="rgba(180,178,190,0.06)" stroke-width="1.5"/>
+    <line x1="200" y1="950" x2="1440" y2="200" stroke="rgba(221,217,208,0.04)" stroke-width="1"/>
+    <line x1="280" y1="340" x2="370" y2="260" stroke="rgba(221,217,208,0.07)" stroke-width="1.5"/>
+    <line x1="240" y1="290" x2="360" y2="390" stroke="rgba(160,158,175,0.05)" stroke-width="1"/>
+    <line x1="-20" y1="960" x2="420" y2="420" stroke="rgba(200,92,58,0.18)" stroke-width="8"/>
+    <line x1="-20" y1="980" x2="430" y2="438" stroke="rgba(176,112,96,0.1)" stroke-width="4"/>
+  </svg>
+
+  <header>
+    <nav>
+      <a href="index.html">about</a>
+      <a href="blog.html" class="active">blog</a>
+      <a href="#" id="cv-link">cv</a>
+    </nav>
+  </header>
+
+  <main>
+    <h1><strong>blog</strong></h1>
+    <!-- <p class="subtitle">Occasional notes on databases, query optimization, and related rabbit holes.</p> -->
+
+    <ul class="post-list">
+      <li class="empty">
+        <div class="post-meta">coming soon</div>
+        <div class="post-title">The satisfiability series</div>
+        <p class="post-excerpt">read along the great hanbook of satisfiability</p>
+      </li>
+    </ul>
+  </main>
+
+</body>
+</html>
